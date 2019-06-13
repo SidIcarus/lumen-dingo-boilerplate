@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 11/25/18
- * Time: 12:50 AM
- */
-
 namespace App\Transformers;
 
 use Illuminate\Database\Eloquent\Model;

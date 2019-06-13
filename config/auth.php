@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 11/24/18
- * Time: 12:17 PM
- */
 
 return [
     'defaults' => [

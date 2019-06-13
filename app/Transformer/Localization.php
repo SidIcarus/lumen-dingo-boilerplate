@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 2/3/19
- * Time: 5:35 AM
- */
-
 namespace App\Transformers;
 
 use App\Values\Localizations\Localization;

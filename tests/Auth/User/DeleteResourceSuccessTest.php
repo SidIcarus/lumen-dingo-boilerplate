@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 12/25/18
- * Time: 12:15 PM
- */
 
 namespace Tests\Auth\User;
 

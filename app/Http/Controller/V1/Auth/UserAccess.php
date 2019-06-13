@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 12/2/18
- * Time: 4:52 PM
- */
-
 namespace App\Http\Controllers\V1\Frontend\User;
 
 use App\Http\Controllers\Controller;

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 12/28/18
- * Time: 7:21 PM
- */
-
 namespace App\Providers;
 
 use Dingo\Api\Auth\Provider\Authorization;

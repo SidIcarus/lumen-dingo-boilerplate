@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lloric
- * Date: 3/6/19
- * Time: 1:46 PM
- */
-
 namespace App\Repositories;
 
 use Prettus\Repository\Contracts\RepositoryInterface;

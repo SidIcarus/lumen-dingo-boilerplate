@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 12/1/18
- * Time: 11:37 AM
- */
-
 namespace App\Criterion\Eloquent;
 
 use Prettus\Repository\Contracts\CriteriaInterface;

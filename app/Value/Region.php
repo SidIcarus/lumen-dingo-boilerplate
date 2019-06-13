@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 2/3/19
- * Time: 5:32 AM
- */
-
 namespace App\Values\Localizations;
 
 use App\Values\Value;

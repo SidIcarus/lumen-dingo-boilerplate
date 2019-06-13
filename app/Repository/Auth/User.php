@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 11/24/18
- * Time: 3:23 PM
- */
-
 namespace App\Repositories\Auth\User;
 
 use App\Models\Auth\User\User;

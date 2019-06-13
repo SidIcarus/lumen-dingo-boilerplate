@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lloric
- * Date: 3/5/19
- * Time: 7:03 AM
- */
-
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;

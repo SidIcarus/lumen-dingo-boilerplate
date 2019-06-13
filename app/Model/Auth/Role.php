@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 12/9/18
- * Time: 8:04 PM
- */
-
 namespace App\Models\Auth\Role;
 
 use App\Traits\Hashable;
