@@ -11,7 +11,9 @@ namespace App\Repositories\Auth\Role;
 use App\Criterion\Eloquent\ThisWhereEqualsCriteria;
 use App\Repositories\BaseRepository;
 use Prettus\Repository\Events\RepositoryEntityUpdated;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Contracts\ValidatorInterface;
+use Prettus\Validator\Exceptions\ValidatorException;
 use Spatie\Permission\Guard;
 
 /**
@@ -21,6 +23,9 @@ use Spatie\Permission\Guard;
  */
 class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
 {
+    /**
+     * @var array
+     */
     protected $fieldSearchable = [
         'name' => 'like',
     ];
@@ -40,7 +45,7 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
     ];
 
     /**
-     * @param     $id
+     * @param $id
      * @param int $permissionId
      */
     public function revokePermissionTo($id, int $permissionId)
@@ -51,21 +56,26 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
     }
 
     /**
-     * @param     $id
+     * @param $id
      * @param int $permissionId
      */
     public function givePermissionTo($id, int $permissionId)
     {
-        event(new RepositoryEntityUpdated($this, $this->find($id)->givePermissionTo($permissionId)));
+        event(
+            new RepositoryEntityUpdated(
+                $this,
+                $this->find($id)->givePermissionTo($permissionId)
+            )
+        );
     }
 
     /**
      * @param array $attributes
-     * @param       $id
+     * @param $id
      *
      * @return mixed
-     * @throws \Prettus\Repository\Exceptions\RepositoryException
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws RepositoryException
+     * @throws ValidatorException
      */
     public function update(array $attributes, $id)
     {
@@ -73,32 +83,22 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
 
         $role = $this->checkDefault($id);
 
-        $attributes['name'] = isset($attributes['name']) ? $attributes['name'] : '';
+        $attributes['name'] = $attributes['name'] ?? '';
 
         $guardName = Guard::getDefaultName($this->model());
         $this->pushCriteria(new ThisWhereEqualsCriteria('name', $attributes['name']));
         $this->pushCriteria(new ThisWhereEqualsCriteria('guard_name', $guardName));
         $checkRole = $this->first();
-        if (!is_null($checkRole) && $role->id != $checkRole->id) {
-            abort(422, "A role `{$attributes['name']}` already exists for guard `$guardName`.");
+        if ($checkRole !== null && $role->id != $checkRole->id) {
+            abort(
+                422,
+                "A role `{$attributes['name']}` already exists for guard `$guardName`."
+            );
         }
 
         $this->skipPresenter(false);
-        return parent::update($attributes, $id);
-    }
 
-    /**
-     * @param $id
-     *
-     * @return mixed
-     */
-    private function checkDefault($id)
-    {
-        $role = $this->find($id);
-        if (in_array($role->name, config('setting.permission.role_names'))) {
-            abort(403, 'You cannot update/delete default role.');
-        }
-        return $role;
+        return parent::update($attributes, $id);
     }
 
     /**
@@ -114,6 +114,7 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
     public function delete($id)
     {
         $this->checkDefault($id);
+
         return parent::delete($id);
     }
 
@@ -128,7 +129,23 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
 
         $role = $this->model()::create($attributes);
         event(new RepositoryEntityUpdated($this, $role));
+
         return $this->parserResult($role);
+    }
+
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
+    private function checkDefault($id)
+    {
+        $role = $this->find($id);
+        if (in_array($role->name, config('setting.permission.role_names'), true)) {
+            abort(403, 'You cannot update/delete default role.');
+        }
+
+        return $role;
     }
 
     private function validate(array $attributes, $rule)

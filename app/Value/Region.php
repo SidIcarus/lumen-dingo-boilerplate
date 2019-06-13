@@ -1,46 +1,58 @@
 <?php declare(strict_types=1);
-namespace App\Values\Localizations;
 
-use App\Values\Value;
+namespace App\Value;
+
+use App\Value\Base as Value;
 use Locale;
 
-class Region extends Value
+/**
+ * Region Value Class
+ *
+ * @package Adventive\Value
+ */
+final class Region extends Value
 {
     /**
-     * @var null
+     * @var string|null
      */
-    private $region = null;
+    private $region;
 
     /**
-     * Region constructor.
+     * Region Value Constructor
      *
-     * @param $region
+     * @param string|null $region
      */
-    public function __construct($region)
+    public function __construct(?string $region)
     {
         $this->region = $region;
     }
 
     /**
+     * @todo add summary
+     *
      * @return string
      */
-    public function getDefaultName()
+    public function getDefaultName(): string
     {
         return Locale::getDisplayRegion($this->region, config('app.locale'));
     }
 
     /**
+     * @todo add summary
+     *
      * @return string
      */
-    public function getLocaleName()
+    public function getLocaleName(): string
     {
         return Locale::getDisplayRegion($this->region, $this->region);
     }
 
     /**
+     * @todo add summary
+     *
      * @return string|null
      */
-    public function getRegion()
+    public function getRegion(): ?string
     {
         return $this->region;
     }

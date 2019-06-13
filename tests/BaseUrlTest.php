@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Laravel\Lumen\Testing\TestCase;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class BaseUrlTest extends TestCase
 {
@@ -11,14 +12,19 @@ class BaseUrlTest extends TestCase
      */
     public function base()
     {
-        $this->get('/', [
-            'Accept' => 'application/x.lumen.dingo.boilerplate.v1+json',
-        ]);
+        $this->get(
+            '/',
+            [
+                'Accept' => 'application/x.lumen.dingo.boilerplate.v1+json',
+            ]
+        );
         $this->assertResponseOk();
-        $this->seeJson([
-            'message' => 'Welcome to Lumen Dingo Boilerplate',
-            'branch' => 'dev-master',
-        ]);
+        $this->seeJson(
+            [
+                'message' => 'Welcome to Lumen Dingo Boilerplate',
+                'branch' => 'dev-master',
+            ]
+        );
     }
 
     /**
@@ -35,7 +41,7 @@ class BaseUrlTest extends TestCase
      *
      * Needs to be implemented by subclasses.
      *
-     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
+     * @return HttpKernelInterface
      */
     public function createApplication()
     {

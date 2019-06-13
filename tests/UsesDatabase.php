@@ -56,18 +56,21 @@ trait UsesDatabase
             $database->connection($name)->beginTransaction();
         }
 
-        $this->beforeApplicationDestroyed(function () use ($database) {
-            foreach ($this->connectionsToTransact() as $name) {
-                $connection = $database->connection($name);
+        $this->beforeApplicationDestroyed(
+            function () use ($database) {
+                foreach ($this->connectionsToTransact() as $name) {
+                    $connection = $database->connection($name);
 
-                $connection->rollBack();
-                $connection->disconnect();
+                    $connection->rollBack();
+                    $connection->disconnect();
+                }
             }
-        });
+        );
     }
 
     protected function connectionsToTransact()
     {
-        return property_exists($this, 'connectionsToTransact') ? $this->connectionsToTransact : [null];
+        return property_exists($this, 'connectionsToTransact')
+            ? $this->connectionsToTransact : [null];
     }
 }

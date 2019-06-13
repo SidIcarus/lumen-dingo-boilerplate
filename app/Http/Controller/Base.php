@@ -18,9 +18,9 @@ class Controller extends BaseController
     use Helpers;
 
     /**
-     * @param               $paginatorOrCollection
-     * @param               $transformer
-     * @param array         $parameters
+     * @param $paginatorOrCollection
+     * @param $transformer
+     * @param array $parameters
      * @param \Closure|null $after
      *
      * @return \Dingo\Api\Http\Response
@@ -30,21 +30,41 @@ class Controller extends BaseController
         $transformer,
         array $parameters = [],
         Closure $after = null
-    ) {
+    ): Response {
         $method = '';
         if ($paginatorOrCollection instanceof Paginator) {
             $method = 'paginator';
-        } elseif ($paginatorOrCollection instanceof Collection OR $paginatorOrCollection instanceof SupportCollection) {
+        } elseif ($paginatorOrCollection instanceof Collection OR $paginatorOrCollection
+            instanceof
+            SupportCollection) {
             $method = 'collection';
         }
 
         $parameters = $this->addResourceKey($transformer, $parameters);
 
-        $response = $this->{$method}($paginatorOrCollection,
+        $response = $this->{$method}(
+            $paginatorOrCollection,
             $transformer,
             $parameters,
             $after
         );
+
+        return $this->addAvailableIncludes($response, $transformer);
+    }
+
+    /**
+     * @param $item
+     * @param \App\Transformers\BaseTransformer $transformer
+     * @param array $parameters
+     * @param \Closure|null $after
+     *
+     * @return \Dingo\Api\Http\Response
+     */
+    protected function item($item, $transformer, $parameters = [], Closure $after = null): Response
+    {
+        $parameters = $this->addResourceKey($transformer, $parameters);
+
+        $response = $this->response->item($item, $transformer, $parameters, $after);
 
         return $this->addAvailableIncludes($response, $transformer);
     }
@@ -60,6 +80,7 @@ class Controller extends BaseController
         $parameters += [
             'key' => $this->checkTransformer($transformer)->getResourceKey(),
         ];
+
         return $parameters;
     }
 
@@ -73,34 +94,21 @@ class Controller extends BaseController
         if (is_string($transformer)) {
             $transformer = app($transformer);
         }
-        return $transformer;
 
+        return $transformer;
     }
 
     /**
      * @param \Dingo\Api\Http\Response $response
-     * @param                          $transformer
+     * @param $transformer
      *
      * @return \Dingo\Api\Http\Response
      */
     private function addAvailableIncludes(Response $response, $transformer): Response
     {
-        return $response->addMeta('include', $this->checkTransformer($transformer)->getAvailableIncludes());
-    }
-
-    /**
-     * @param                                   $item
-     * @param \App\Transformers\BaseTransformer $transformer
-     * @param array                             $parameters
-     * @param \Closure|null                     $after
-     *
-     * @return \Dingo\Api\Http\Response
-     */
-    protected function item($item, $transformer, $parameters = [], Closure $after = null)
-    {
-        $parameters = $this->addResourceKey($transformer, $parameters);
-
-        $response = $this->response->item($item, $transformer, $parameters, $after);
-        return $this->addAvailableIncludes($response, $transformer);
+        return $response->addMeta(
+            'include',
+            $this->checkTransformer($transformer)->getAvailableIncludes()
+        );
     }
 }

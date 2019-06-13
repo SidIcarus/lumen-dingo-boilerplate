@@ -1,10 +1,4 @@
 <?php declare(strict_types=1);
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 12/2/18
- * Time: 1:14 PM
- */
 
 namespace Tests\Auth\Authorization;
 
@@ -45,10 +39,16 @@ class RoleAccessTest extends BaseRole
             ];
         }
 
-        $this->call($method, '/auth/' . $uri, $param, [], [], $this->addHeaders([], true));
+        $this->call(
+            $method,
+            '/auth/' . $uri,
+            $param,
+            [],
+            [],
+            $this->addHeaders([], true)
+        );
         $this->assertResponseStatus($statusCode);
     }
-
 
     public function dataResources(): array
     {

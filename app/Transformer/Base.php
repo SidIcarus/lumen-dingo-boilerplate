@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 namespace App\Transformers;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,7 +8,6 @@ use League\Fractal\TransformerAbstract;
 
 abstract class BaseTransformer extends TransformerAbstract
 {
-
     /**
      * @return string
      */
@@ -20,10 +20,14 @@ abstract class BaseTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function filterData(array $response, array $data, array $roleNames = null): array
-    {
+    public function filterData(
+        array $response,
+        array $data,
+        array $roleNames = null
+    ): array {
         if (app('auth')->user()->hasAnyRole(
-            is_null($roleNames) ? config('setting.permission.role_names.system') : $roleNames
+            $roleNames === null ? config('setting.permission.role_names.system')
+                : $roleNames
         )) {
             return array_merge($response, $data);
         }
@@ -35,9 +39,9 @@ abstract class BaseTransformer extends TransformerAbstract
      * prepare human readable time with users timezone
      *
      * @param \Illuminate\Database\Eloquent\Model $entity
-     * @param                                     $responseData
-     * @param array                               $columns
-     * @param bool                                $isIncludeDefault
+     * @param $responseData
+     * @param array $columns
+     * @param bool $isIncludeDefault
      *
      * @return array
      */
@@ -60,14 +64,15 @@ abstract class BaseTransformer extends TransformerAbstract
         $timeZone = $auth->user()->timezone ?? config('app.timezone');
 
         $readable = function ($column) use ($entity, $timeZone) {
-
             // sometime column is not carbonated, i mean instance if Carbon/Carbon
             $at = Carbon::parse($entity->{$column});
 
             return [
                 $column => $at->format(config('setting.formats.datetime_12')),
                 $column . '_readable' => $at->diffForHumans(),
-                $column . '_tz' => $at->timezone($timeZone)->format(config('setting.formats.datetime_12')),
+                $column . '_tz' => $at->timezone($timeZone)->format(
+                    config('setting.formats.datetime_12')
+                ),
                 $column . '_readable_tz' => $at->timezone($timeZone)->diffForHumans(),
             ];
         };
@@ -89,8 +94,11 @@ abstract class BaseTransformer extends TransformerAbstract
 
         $return = [];
         foreach ($toBeConvert as $column) {
-            $return = array_merge($return,
-                (!is_null($entity->{$column})) ? array_merge($return, $readable($column)) : []);
+            $return = array_merge(
+                $return,
+                ($entity->{$column} !== null) ? array_merge($return, $readable($column))
+                    : []
+            );
         }
 
         return array_merge($responseData, $return);
@@ -98,6 +106,10 @@ abstract class BaseTransformer extends TransformerAbstract
 
     protected function collection($data, $transformer, $resourceKey = null)
     {
-        return parent::collection($data, $transformer, $resourceKey ?: $transformer->getResourceKey());
+        return parent::collection(
+            $data,
+            $transformer,
+            $resourceKey ?: $transformer->getResourceKey()
+        );
     }
 }

@@ -5,6 +5,7 @@ namespace Tests;
 use App\Models\Auth\User\User;
 use Laravel\Lumen\Testing\TestCase;
 use Laravel\Passport\Passport;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class LocaleTest extends TestCase
 {
@@ -14,10 +15,13 @@ class LocaleTest extends TestCase
     public function getAll()
     {
         Passport::actingAs(factory(User::class)->create());
-        $this->get('localizations', [
-            'Accept' => 'application/x.lumen.dingo.boilerplate.v1+json',
-            'Authorization' => 'Bearer xxxxx',
-        ])
+        $this->get(
+            'localizations',
+            [
+                'Accept' => 'application/x.lumen.dingo.boilerplate.v1+json',
+                'Authorization' => 'Bearer xxxxx',
+            ]
+        )
             ->assertResponseOk();
     }
 
@@ -44,10 +48,13 @@ class LocaleTest extends TestCase
 
         if ($locale == 'xxx') {
             $this->assertResponseStatus(412);
-            $this->seeJson([
-                'message' => 'Unsupported Language.',
-                'status_code' => 412,
-            ]);
+            $this->seeJson(
+                [
+                    'message' => 'Unsupported Language.',
+                    'status_code' => 412,
+                ]
+            );
+
             return;
         }
 
@@ -63,10 +70,12 @@ class LocaleTest extends TestCase
         }
         $this->assertResponseOk();
         $this->assertEquals(app('translator')->getLocale(), $locale);
-        $this->seeJson([
-            'message' => $message,
-            'branch' => 'dev-master',
-        ]);
+        $this->seeJson(
+            [
+                'message' => $message,
+                'branch' => 'dev-master',
+            ]
+        );
     }
 
     /**
@@ -74,7 +83,7 @@ class LocaleTest extends TestCase
      *
      * Needs to be implemented by subclasses.
      *
-     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
+     * @return HttpKernelInterface
      */
     public function createApplication()
     {

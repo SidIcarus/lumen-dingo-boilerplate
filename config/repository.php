@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 /*
 |--------------------------------------------------------------------------
 | Prettus Repository Config
@@ -6,6 +7,7 @@
 |
 |
 */
+
 return [
 
     /*
@@ -34,7 +36,7 @@ return [
         'params' => [
             'include' => 'include',
         ],
-        'serializer' => League\Fractal\Serializer\DataArraySerializer::class
+        'serializer' => League\Fractal\Serializer\DataArraySerializer::class,
     ],
 
     /*
@@ -138,7 +140,14 @@ return [
        | 'except'  =>['find'],
        */
         'allowed' => [
-            'only' => ['all', 'paginate', 'find', 'findByField', 'findWhere', 'getByCriteria'],
+            'only' => [
+                'all',
+                'paginate',
+                'find',
+                'findByField',
+                'findWhere',
+                'getByCriteria',
+            ],
             'except' => null,
         ],
     ],

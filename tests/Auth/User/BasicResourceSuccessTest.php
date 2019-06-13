@@ -7,7 +7,6 @@ use Tests\TestCase;
 
 class BasicResourceSuccessTest extends TestCase
 {
-
     /**
      * @test
      */
@@ -15,13 +14,17 @@ class BasicResourceSuccessTest extends TestCase
     {
         $this->loggedInAs();
 
-        $this->post($this->route('backend.users.store'), $this->userData(), $this->addHeaders());
+        $this->post(
+            $this->route('backend.users.store'),
+            $this->userData(),
+            $this->addHeaders()
+        );
         $this->assertResponseStatus(201);
 
         $data = $this->userData();
         unset($data['password']);
 
-        $this->seeInDatabase((new User)->getTable(), $data);
+        $this->seeInDatabase((new User())->getTable(), $data);
         $this->seeJson($data);
     }
 
@@ -34,14 +37,20 @@ class BasicResourceSuccessTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $this->put($this->route('backend.users.update', ['id' => $user->getHashedId()]), $this->userData(),
-            $this->addHeaders());
+        $this->put(
+            $this->route('backend.users.update', ['id' => $user->getHashedId()]),
+            $this->userData(),
+            $this->addHeaders()
+        );
         $this->assertResponseOk();
 
         $data = $this->userData();
         unset($data['password']);
 
-        $this->seeInDatabase((new User)->getTable(), array_merge($data, ['id' => $user->id]));
+        $this->seeInDatabase(
+            (new User())->getTable(),
+            array_merge($data, ['id' => $user->id])
+        );
         $this->seeJson($data);
     }
 
@@ -54,13 +63,20 @@ class BasicResourceSuccessTest extends TestCase
 
         $user = factory(User::class)->create();
 
-        $this->delete($this->route('backend.users.destroy', ['id' => $user->getHashedId()]), [], $this->addHeaders());
+        $this->delete(
+            $this->route('backend.users.destroy', ['id' => $user->getHashedId()]),
+            [],
+            $this->addHeaders()
+        );
         $this->assertResponseStatus(204);
 
-        $this->notSeeInDatabase((new User)->getTable(), [
-            'id' => $user->id,
-            'deleted_at' => null,
-        ]);
+        $this->notSeeInDatabase(
+            (new User())->getTable(),
+            [
+                'id' => $user->id,
+                'deleted_at' => null,
+            ]
+        );
     }
 
     /**
@@ -71,9 +87,15 @@ class BasicResourceSuccessTest extends TestCase
         $this->loggedInAs();
         $user = factory(User::class)->create($this->userData());
 
-        $this->get($this->route('backend.users.show', [
-            'id' => $user->getHashedId(),
-        ]), $this->addHeaders());
+        $this->get(
+            $this->route(
+                'backend.users.show',
+                [
+                    'id' => $user->getHashedId(),
+                ]
+            ),
+            $this->addHeaders()
+        );
 
         $this->assertResponseOk();
         $data = $this->userData();

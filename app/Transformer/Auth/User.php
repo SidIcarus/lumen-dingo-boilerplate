@@ -16,6 +16,7 @@ class UserTransformer extends BaseTransformer
         'roles',
         'permissions',
     ];
+
     /**
      * List of resources to automatically include
      *
@@ -31,7 +32,7 @@ class UserTransformer extends BaseTransformer
      *
      * @return array
      */
-    public function transform(User $user)
+    public function transform(User $user): array
     {
         $response = [
             'id' => $user->getHashedId(),
@@ -40,21 +41,24 @@ class UserTransformer extends BaseTransformer
             'email' => $user->email,
         ];
 
-        $response = $this->filterData($response, [
+        $response = $this->filterData(
+            $response,
+            [
 
-        ]);
+            ]
+        );
 
         return $this->addTimesHumanReadable($user, $response);
     }
 
     public function includeRoles(User $user)
     {
-        return $this->collection($user->roles, new RoleTransformer);
+        return $this->collection($user->roles, new RoleTransformer());
     }
 
     public function includePermissions(User $user)
     {
-        return $this->collection($user->permissions, new PermissionTransformer);
+        return $this->collection($user->permissions, new PermissionTransformer());
     }
 
     /**

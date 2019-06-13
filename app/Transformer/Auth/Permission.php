@@ -1,5 +1,5 @@
-
 <?php declare(strict_types=1);
+
 namespace App\Transformers\Auth;
 
 use App\Models\Auth\Permission\Permission;
@@ -14,6 +14,7 @@ class PermissionTransformer extends BaseTransformer
      */
     protected $availableIncludes = [
     ];
+
     /**
      * List of resources to automatically include
      *
@@ -29,7 +30,7 @@ class PermissionTransformer extends BaseTransformer
      *
      * @return array
      */
-    public function transform(Permission $permission)
+    public function transform(Permission $permission): array
     {
         return [
             'id' => $permission->getHashedId(),

@@ -3,8 +3,10 @@
 namespace Tests;
 
 use App\Models\Auth\User\User;
+use Laravel\Lumen\Application;
 use Laravel\Lumen\Testing\TestCase as BaseTestCase;
 use Laravel\Passport\Passport;
+use Spatie\Permission\PermissionRegistrar;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -14,26 +16,29 @@ abstract class TestCase extends BaseTestCase
     {
         $this->prepareDatabase();
         parent::setUp();
-        $this->setUpDatabase(function () {
-            $this->artisan('db:seed');
-            $this->artisan('passport:install');
-        });
+        $this->setUpDatabase(
+            function () {
+                $this->artisan('db:seed');
+                $this->artisan('passport:install');
+            }
+        );
         app('cache')
             ->store(
-                config('permission.cache.store') != 'default'
+                config('permission.cache.store') !== 'default'
                     ? config('permission.cache.store')
                     : null
             )
             ->forget(config('permission.cache.key'));
         app('cache')->flush();
-        $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->registerPermissions();
+        $this->app->make(PermissionRegistrar::class)
+            ->registerPermissions();
         $this->beginDatabaseTransaction();
     }
 
     /**
      * Creates the application.
      *
-     * @return \Laravel\Lumen\Application
+     * @return Application
      */
     public function createApplication()
     {
@@ -74,13 +79,14 @@ abstract class TestCase extends BaseTestCase
         foreach ($parameters as $parameter => $value) {
             $uri = str_replace('{' . $parameter . '}', $value, $uri);
         }
+
         return $uri;
 //        return app('Dingo\Api\Routing\UrlGenerator')->version('v1')->route($name, $parameters);
     }
 
     /**
      * @param array $headers
-     * @param bool  $isServer
+     * @param bool $isServer
      *
      * @return array
      */
@@ -98,12 +104,14 @@ abstract class TestCase extends BaseTestCase
 
     protected function loggedInAs(string $roleName = 'system'): User
     {
-        if ($roleName == 'user') {
+        if ($roleName === 'user') {
             $user = factory(User::class)->create();
         } else {
-            $user = User::role(config("setting.permission.role_names.$roleName"))->first();
+            $user = User::role(config("setting.permission.role_names.$roleName"))->first(
+            );
         }
         Passport::actingAs($user);
+
 //        $this->actingAs($user);
 
         return $user;

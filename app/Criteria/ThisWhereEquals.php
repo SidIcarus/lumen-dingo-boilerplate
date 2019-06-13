@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 namespace App\Criterion\Eloquent;
 
 use Prettus\Repository\Contracts\CriteriaInterface;
@@ -6,8 +7,14 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 
 class ThisWhereEqualsCriteria implements CriteriaInterface
 {
+    /**
+     * @var string
+     */
     protected $column;
 
+    /**
+     * @var string
+     */
     protected $value;
 
     public function __construct(string $column, string $value)
@@ -19,7 +26,7 @@ class ThisWhereEqualsCriteria implements CriteriaInterface
     /**
      * Apply criteria in query repository
      *
-     * @param                     $model
+     * @param $model
      * @param RepositoryInterface $repository
      *
      * @return mixed

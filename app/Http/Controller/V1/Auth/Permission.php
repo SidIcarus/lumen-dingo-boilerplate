@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Auth\Permission\PermissionRepository;
 use App\Transformers\Auth\PermissionTransformer;
 use Dingo\Api\Http\Request;
+use Dingo\Api\Http\Response;
 use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
@@ -15,6 +16,9 @@ use Prettus\Repository\Criteria\RequestCriteria;
  */
 class PermissionController extends Controller
 {
+    /**
+     * @var PermissionRepository
+     */
     protected $permissionRepository;
 
     /**
@@ -33,6 +37,9 @@ class PermissionController extends Controller
     }
 
     /**
+     * @param \Dingo\Api\Http\Request $request
+     *
+     * @return Response
      * @api                {get} /auth/permissions Get all permissions
      * @apiName            get-all-permissions
      * @apiGroup           Permission
@@ -40,17 +47,22 @@ class PermissionController extends Controller
      * @apiPermission      Authenticated User
      * @apiUse             PermissionsResponse
      *
-     * @param \Dingo\Api\Http\Request $request
-     *
-     * @return \Dingo\Api\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $this->permissionRepository->pushCriteria(new RequestCriteria($request));
-        return $this->paginatorOrCollection($this->permissionRepository->paginate(), new PermissionTransformer);
+
+        return $this->paginatorOrCollection(
+            $this->permissionRepository->paginate(),
+            new PermissionTransformer()
+        );
     }
 
     /**
+     * @param \Dingo\Api\Http\Request $request
+     * @param string $id
+     *
+     * @return Response
      * @api                {get} /auth/permissions/{id} Show permission
      * @apiName            show-permission
      * @apiGroup           Permission
@@ -58,16 +70,12 @@ class PermissionController extends Controller
      * @apiPermission      Authenticated User
      * @apiUse             PermissionResponse
      *
-     * @param \Dingo\Api\Http\Request $request
-     * @param string                  $id
-     *
-     * @return \Dingo\Api\Http\Response
      */
-    public function show(Request $request, string $id)
+    public function show(Request $request, string $id): Response
     {
         $this->permissionRepository->pushCriteria(new RequestCriteria($request));
         $p = $this->permissionRepository->find($this->decodeHash($id));
-        return $this->item($p, new PermissionTransformer);
-    }
 
+        return $this->item($p, new PermissionTransformer());
+    }
 }

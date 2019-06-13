@@ -14,12 +14,18 @@ class BasicResourceFailedTest extends TestCase
     {
         $user = $this->loggedInAs();
 
-        $this->delete($this->route('backend.users.destroy', ['id' => $user->getHashedId()]), [], $this->addHeaders());
+        $this->delete(
+            $this->route('backend.users.destroy', ['id' => $user->getHashedId()]),
+            [],
+            $this->addHeaders()
+        );
 
         $this->assertResponseStatus(403);
-        $this->seeJson([
-            'message' => 'You cannot delete your self.',
-        ]);
+        $this->seeJson(
+            [
+                'message' => 'You cannot delete your self.',
+            ]
+        );
     }
 
     /**
@@ -39,15 +45,20 @@ class BasicResourceFailedTest extends TestCase
         // remove last char
         $id = substr($hashedId, 0, strlen($hashedId) - 1);
 
-        $this->get($this->route('backend.users.show', ['id' => $id]), $this->addHeaders());
+        $this->get(
+            $this->route('backend.users.show', ['id' => $id]),
+            $this->addHeaders()
+        );
         $this->assertResponseStatus(400);
-        $this->seeJson([
-            'message' =>
+        $this->seeJson(
+            [
+                'message' =>
 //                $environment == 'production'
 //                ? Response::$statusTexts[Response::HTTP_NOT_FOUND]
 //                :
-                'Invalid hashed id.',
-        ]);
+                    'Invalid hashed id.',
+            ]
+        );
     }
 
     /**
@@ -63,7 +74,10 @@ class BasicResourceFailedTest extends TestCase
 
         $user->delete();
 
-        $this->get($this->route('backend.users.show', ['id' => $hashedId]), $this->addHeaders());
+        $this->get(
+            $this->route('backend.users.show', ['id' => $hashedId]),
+            $this->addHeaders()
+        );
         $this->assertResponseStatus(404);
     }
 }

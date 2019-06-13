@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Auth\User\UserRepository;
 use App\Transformers\Auth\UserTransformer;
 use Dingo\Api\Http\Request;
+use Dingo\Api\Http\Response;
 use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
@@ -15,6 +16,9 @@ use Prettus\Repository\Criteria\RequestCriteria;
  */
 class UserController extends Controller
 {
+    /**
+     * @var UserRepository
+     */
     protected $userRepository;
 
     /**
@@ -36,6 +40,9 @@ class UserController extends Controller
     }
 
     /**
+     * @param \Dingo\Api\Http\Request $request
+     *
+     * @return Response
      * @api                {get} /auth/users Get all users
      * @apiName            get-all-users
      * @apiGroup           User
@@ -43,17 +50,21 @@ class UserController extends Controller
      * @apiPermission      Authenticated User
      * @apiUse             UsersResponse
      *
-     * @param \Dingo\Api\Http\Request $request
-     *
-     * @return \Dingo\Api\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $this->userRepository->pushCriteria(new RequestCriteria($request));
-        return $this->paginatorOrCollection($this->userRepository->paginate(), new UserTransformer);
+
+        return $this->paginatorOrCollection(
+            $this->userRepository->paginate(),
+            new UserTransformer()
+        );
     }
 
     /**
+     * @param string $id
+     *
+     * @return Response
      * @api                {get} /auth/users/{id} Show user
      * @apiName            show-user
      * @apiGroup           User
@@ -61,17 +72,18 @@ class UserController extends Controller
      * @apiPermission      Authenticated User
      * @apiUse             UserResponse
      *
-     * @param string $id
-     *
-     * @return \Dingo\Api\Http\Response
      */
-    public function show(string $id)
+    public function show(string $id): Response
     {
         $user = $this->userRepository->find($this->decodeHash($id));
-        return $this->item($user, new UserTransformer);
+
+        return $this->item($user, new UserTransformer());
     }
 
     /**
+     * @param \Dingo\Api\Http\Request $request
+     *
+     * @return Response
      * @api                {post} /auth/users Store user
      * @apiName            store-user
      * @apiGroup           User
@@ -83,22 +95,30 @@ class UserController extends Controller
      * @apiParam {String} email (required)
      * @apiParam {String} password (required)
      *
-     * @param \Dingo\Api\Http\Request $request
-     *
-     * @return \Dingo\Api\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): Response
     {
-        return $this->item($this->userRepository->create($request->only([
-            'first_name',
-            'last_name',
-            'email',
-            'password',
-        ])), new UserTransformer)
+        return $this->item(
+            $this->userRepository->create(
+                $request->only(
+                    [
+                        'first_name',
+                        'last_name',
+                        'email',
+                        'password',
+                    ]
+                )
+            ),
+            new UserTransformer()
+        )
             ->statusCode(201);
     }
 
     /**
+     * @param \Dingo\Api\Http\Request $request
+     * @param string $id
+     *
+     * @return Response
      * @api                {put} /auth/users/ Update user
      * @apiName            update-user
      * @apiGroup           User
@@ -110,24 +130,28 @@ class UserController extends Controller
      * @apiParam {String} email
      * @apiParam {String} password
      *
-     * @param \Dingo\Api\Http\Request $request
-     * @param string                  $id
-     *
-     * @return \Dingo\Api\Http\Response
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): Response
     {
-        $user = $this->userRepository->update($request->only([
-            'first_name',
-            'last_name',
-            'email',
-            'password',
-        ]), $this->decodeHash($id));
-        return $this->item($user, new UserTransformer);
+        $user = $this->userRepository->update(
+            $request->only(
+                [
+                    'first_name',
+                    'last_name',
+                    'email',
+                    'password',
+                ]
+            ),
+            $this->decodeHash($id)
+        );
+
+        return $this->item($user, new UserTransformer());
     }
 
-
     /**
+     * @param string $id
+     *
+     * @return Response
      * @api                {delete} /auth/users/{id} Destroy user
      * @apiName            destroy-user
      * @apiGroup           User
@@ -135,11 +159,8 @@ class UserController extends Controller
      * @apiPermission      Authenticated User
      * @apiUse             NoContentResponse
      *
-     * @param string $id
-     *
-     * @return \Dingo\Api\Http\Response
      */
-    public function destroy(string $id)
+    public function destroy(string $id): Response
     {
         $id = $this->decodeHash($id);
         if (app('auth')->id() == $id) {
@@ -147,6 +168,7 @@ class UserController extends Controller
         }
 
         $this->userRepository->delete($id);
+
         return $this->response->noContent();
     }
 }

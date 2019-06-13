@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
+
 namespace App\Http\Controllers\V1\Frontend\User;
 
 use App\Http\Controllers\Controller;
 use App\Transformers\Auth\UserTransformer;
+use Dingo\Api\Http\Response;
 
 /**
  * Class UserAccessController
@@ -12,6 +14,7 @@ use App\Transformers\Auth\UserTransformer;
 class UserAccessController extends Controller
 {
     /**
+     * @return Response
      * @api                {get} /profile Get current authenticated user
      * @apiName            get-authenticated-user
      * @apiGroup           UserAccess
@@ -19,10 +22,9 @@ class UserAccessController extends Controller
      * @apiPermission      Authenticated User
      * @apiUse             UserResponse
      *
-     * @return \Dingo\Api\Http\Response
      */
-    public function profile()
+    public function profile(): Response
     {
-        return $this->item($this->user(), new UserTransformer);
+        return $this->item($this->user(), new UserTransformer());
     }
 }

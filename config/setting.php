@@ -20,7 +20,7 @@ return [
         'token' => [
             'access_token_expire' => 60 * 24, // 1day
             'refresh_token_expire' => 60 * 24 * 2, // 2days
-        ]
+        ],
     ],
 
     'repository' => [

@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 namespace App\Transformers;
 
 use App\Values\Localizations\Localization;
@@ -24,7 +25,7 @@ class LocalizationTransformer extends BaseTransformer
      *
      * @return array
      */
-    public function transform(Localization $entity)
+    public function transform(Localization $entity): array
     {
         $response = [
             'id' => $entity->getLanguage(),
@@ -38,9 +39,7 @@ class LocalizationTransformer extends BaseTransformer
 
         // now we manually build the regions
         $regions = [];
-        $entity_regions = $entity->getRegions();
-
-        foreach ($entity_regions as $region) {
+        foreach ($entity->getRegions() as $region) {
             $regions[] = [
                 'code' => $region->getRegion(),
                 'default_name' => $region->getDefaultName(),
@@ -49,13 +48,19 @@ class LocalizationTransformer extends BaseTransformer
         }
 
         // now add the regions
-        $response = array_merge($response, [
-            'regions' => $regions,
-        ]);
+        $response = array_merge(
+            $response,
+            [
+                'regions' => $regions,
+            ]
+        );
 
-        $response = $this->filterData($response, [
+        $response = $this->filterData(
+            $response,
+            [
 
-        ]);
+            ]
+        );
 
         return $response;
     }

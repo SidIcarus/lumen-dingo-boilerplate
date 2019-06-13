@@ -26,13 +26,16 @@ class UserAccessTest extends TestCase
         if ($method === 'post' && $uri === 'users') {
             // only param
             $param = $this->userData();
-        } elseif ($method === 'get' && $uri === 'users/{id}' ||
-            $method === 'delete' && $uri === 'users/{id}') {
+        } elseif ($method === 'get'
+            && $uri === 'users/{id}'
+            || $method === 'delete'
+            && $uri === 'users/{id}') {
             // only uri
             $uri = $this->replaceUserUri($uri);
-
-        } elseif ($method === 'put' && $uri === 'users/{id}/restore' ||
-            $method === 'delete' && $uri === 'users/{id}/purge') {
+        } elseif ($method === 'put' && $uri === 'users/{id}/restore'
+            || $method
+            === 'delete'
+            && $uri === 'users/{id}/purge') {
             // only uri
             $uri = $this->replaceUserUri($uri, true);
         } elseif ($method === 'put' && $uri === 'users/{id}') {
@@ -41,17 +44,15 @@ class UserAccessTest extends TestCase
             $param = $this->userData();
         }
 
-        $this->call($method, '/auth/' . $uri, $param, [], [], $this->addHeaders([], true));
+        $this->call(
+            $method,
+            '/auth/' . $uri,
+            $param,
+            [],
+            [],
+            $this->addHeaders([], true)
+        );
         $this->assertResponseStatus($statusCode);
-    }
-
-    private function replaceUserUri($uri, bool $isDeleted = false): string
-    {
-        $user = factory(User::class)->create();
-        if ($isDeleted) {
-            $user->delete();
-        }
-        return str_replace('{id}', $user->getHashedId(), $uri);
     }
 
     public function dataResources(): array
@@ -94,5 +95,15 @@ class UserAccessTest extends TestCase
             'restore by guest' => ['put', 'users/{id}/restore', '', 401],
             'purge by guest' => ['delete', 'users/{id}/purge', '', 401],
         ];
+    }
+
+    private function replaceUserUri($uri, bool $isDeleted = false): string
+    {
+        $user = factory(User::class)->create();
+        if ($isDeleted) {
+            $user->delete();
+        }
+
+        return str_replace('{id}', $user->getHashedId(), $uri);
     }
 }

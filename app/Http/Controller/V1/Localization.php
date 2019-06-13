@@ -1,9 +1,11 @@
 <?php declare(strict_types=1);
+
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Transformers\LocalizationTransformer;
 use App\Values\Localizations\Localization;
+use Dingo\Api\Http\Response;
 
 /**
  * Class LocalizationController
@@ -13,6 +15,7 @@ use App\Values\Localizations\Localization;
 class LocalizationController extends Controller
 {
     /**
+     * @return Response
      * @api                {get} /localizations Get all localizations
      * @apiName            get-all-localizations
      * @apiGroup           Localization
@@ -20,9 +23,8 @@ class LocalizationController extends Controller
      * @apiPermission      Authenticated User
      * @apiUse             LocalizationsResponse
      *
-     * @return \Dingo\Api\Http\Response
      */
-    public function index()
+    public function index(): Response
     {
         $localizations = collect();
 
@@ -35,6 +37,9 @@ class LocalizationController extends Controller
             }
         }
 
-        return $this->paginatorOrCollection($localizations, LocalizationTransformer::class);
+        return $this->paginatorOrCollection(
+            $localizations,
+            LocalizationTransformer::class
+        );
     }
 }

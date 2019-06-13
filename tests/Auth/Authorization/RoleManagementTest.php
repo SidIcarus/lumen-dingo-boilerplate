@@ -1,10 +1,4 @@
 <?php declare(strict_types=1);
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 12/24/18
- * Time: 11:17 AM
- */
 
 namespace Tests\Auth\Authorization;
 
@@ -30,15 +24,24 @@ class RoleManagementTest extends BaseRole
                 $this->post($this->route($route), $paramNoData, $this->addHeaders());
                 break;
             case 'update':
-                $this->put($this->route($route, [
-                    'id' => $this->createRole()->getHashedId(),
-                ]), $paramNoData, $this->addHeaders());
+                $this->put(
+                    $this->route(
+                        $route,
+                        [
+                            'id' => $this->createRole()->getHashedId(),
+                        ]
+                    ),
+                    $paramNoData,
+                    $this->addHeaders()
+                );
                 break;
         }
         $this->assertResponseStatus(422);
-        $this->seeJson([
-            'name' => ['The name field is required.'],
-        ]);
+        $this->seeJson(
+            [
+                'name' => ['The name field is required.'],
+            ]
+        );
     }
 
     /**
@@ -52,13 +55,22 @@ class RoleManagementTest extends BaseRole
     public function defaultRoleNotAllowed($verbMethod, $routeName)
     {
         $this->loggedInAs();
-        $this->{$verbMethod}($this->route($routeName, [
-            'id' => $this->getByRoleName('system')->getHashedId(),
-        ]), [], $this->addHeaders());
+        $this->{$verbMethod}(
+            $this->route(
+                $routeName,
+                [
+                    'id' => $this->getByRoleName('system')->getHashedId(),
+                ]
+            ),
+            [],
+            $this->addHeaders()
+        );
         $this->assertResponseStatus(403);
-        $this->seeJson([
-            'message' => 'You cannot update/delete default role.',
-        ]);
+        $this->seeJson(
+            [
+                'message' => 'You cannot update/delete default role.',
+            ]
+        );
     }
 
     /**
@@ -91,9 +103,16 @@ class RoleManagementTest extends BaseRole
             'name' => $roleNameTest . ' new',
         ];
 
-        $this->put($this->route('backend.roles.update', [
-            'id' => $role->getHashedId(),
-        ]), $data, $this->addHeaders());
+        $this->put(
+            $this->route(
+                'backend.roles.update',
+                [
+                    'id' => $role->getHashedId(),
+                ]
+            ),
+            $data,
+            $this->addHeaders()
+        );
 
         $this->assertResponseStatus(200);
         $this->seeJson($data);
@@ -115,14 +134,23 @@ class RoleManagementTest extends BaseRole
             'name' => $duplicateNameTest,
         ];
 
-        $this->put($this->route('backend.roles.update', [
-            'id' => $role->getHashedId(),
-        ]), $data, $this->addHeaders());
+        $this->put(
+            $this->route(
+                'backend.roles.update',
+                [
+                    'id' => $role->getHashedId(),
+                ]
+            ),
+            $data,
+            $this->addHeaders()
+        );
 
         $this->assertResponseStatus(422);
-        $this->seeJson([
-            'message' => "A role `{$duplicateNameTest}` already exists for guard `api`.",
-        ]);
+        $this->seeJson(
+            [
+                'message' => "A role `{$duplicateNameTest}` already exists for guard `api`.",
+            ]
+        );
     }
 
     /**
@@ -141,8 +169,10 @@ class RoleManagementTest extends BaseRole
         $this->post($this->route('backend.roles.store'), $data, $this->addHeaders());
 
         $this->assertResponseStatus(422);
-        $this->seeJson([
-            'message' => "A role `$roleNameTest` already exists for guard `api`.",
-        ]);
+        $this->seeJson(
+            [
+                'message' => "A role `$roleNameTest` already exists for guard `api`.",
+            ]
+        );
     }
 }

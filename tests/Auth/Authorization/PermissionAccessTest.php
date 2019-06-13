@@ -1,10 +1,4 @@
 <?php declare(strict_types=1);
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 12/2/18
- * Time: 1:14 PM
- */
 
 namespace Tests\Auth\Authorization;
 
@@ -51,5 +45,4 @@ class PermissionAccessTest extends BaseRole
             'show by guest' => ['get', 'permissions/{id}', '', 401],
         ];
     }
-
 }

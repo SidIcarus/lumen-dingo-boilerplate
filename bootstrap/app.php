@@ -1,6 +1,5 @@
 <?php declare(strict_types=1);
 
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
@@ -69,16 +68,20 @@ $app->singleton(
 |
 */
 
-$app->middleware([
-    App\Http\Middleware\LocalizationMiddleware::class,
-    Barryvdh\Cors\HandleCors::class,
-]);
+$app->middleware(
+    [
+        App\Http\Middleware\LocalizationMiddleware::class,
+        Barryvdh\Cors\HandleCors::class,
+    ]
+);
 
-$app->routeMiddleware([
-    'serializer' => Liyu\Dingo\SerializerSwitch::class,
-    'permission' => Spatie\Permission\Middlewares\PermissionMiddleware::class,
-    'role' => Spatie\Permission\Middlewares\RoleMiddleware::class,
-]);
+$app->routeMiddleware(
+    [
+        'serializer' => Liyu\Dingo\SerializerSwitch::class,
+        'permission' => Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'role' => Spatie\Permission\Middlewares\RoleMiddleware::class,
+    ]
+);
 
 /*
 |--------------------------------------------------------------------------
@@ -91,7 +94,6 @@ $app->routeMiddleware([
 |
 */
 
-
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\RepositoryServiceProvider::class);
 $app->register(Laravel\Passport\PassportServiceProvider::class);
@@ -102,21 +104,34 @@ $app->register(Vinkla\Hashids\HashidsServiceProvider::class);
 $app->register(Barryvdh\Cors\ServiceProvider::class);
 $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
 
-$app[Dingo\Api\Auth\Auth::class]->extend('passport', function ($app) {
-    return $app[App\Providers\GuardServiceProvider::class];
-});
+$app[Dingo\Api\Auth\Auth::class]->extend(
+    'passport',
+    function ($app) {
+        return $app[App\Providers\GuardServiceProvider::class];
+    }
+);
 $app[Dingo\Api\Exception\Handler::class]
-    ->register(function (Spatie\Permission\Exceptions\RoleAlreadyExists $exception) {
-        abort(422, $exception->getMessage());
-    });
+    ->register(
+        function (Spatie\Permission\Exceptions\RoleAlreadyExists $exception) {
+            abort(422, $exception->getMessage());
+        }
+    );
 $app[Dingo\Api\Exception\Handler::class]
-    ->register(function (Prettus\Validator\Exceptions\ValidatorException $exception) {
-        throw new Dingo\Api\Exception\ValidationHttpException($exception->getMessageBag(), $exception);
-    });
+    ->register(
+        function (Prettus\Validator\Exceptions\ValidatorException $exception) {
+            throw new Dingo\Api\Exception\ValidationHttpException(
+                $exception->getMessageBag(), $exception
+            );
+        }
+    );
 $app[Dingo\Api\Exception\Handler::class]
-    ->register(function (Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
-        throw new Symfony\Component\HttpKernel\Exception\NotFoundHttpException($exception->getMessage(), $exception);
-    });
+    ->register(
+        function (Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
+            throw new Symfony\Component\HttpKernel\Exception\NotFoundHttpException(
+                $exception->getMessage(), $exception
+            );
+        }
+    );
 
 if (class_exists('Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider')) {
     $app->register('Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider');
@@ -132,11 +147,15 @@ if (class_exists('Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider')) {
 $api = $app[Dingo\Api\Routing\Router::class];
 
 // Version 1
-$api->version('v1', [
-    'namespace' => 'App\Http\Controllers\V1',
-], function ($api) {
-    require __DIR__ . '/../routes/v1/api.php';
-});
+$api->version(
+    'v1',
+    [
+        'namespace' => 'App\Http\Controllers\V1',
+    ],
+    function ($api) {
+        require __DIR__ . '/../routes/v1/api.php';
+    }
+);
 
 /*
 |--------------------------------------------------------------------------
@@ -149,10 +168,13 @@ $api->version('v1', [
 |
 */
 
-$app->router->group([
-    'namespace' => 'App\Http\Controllers',
-], function ($router) use ($app) {
-    require __DIR__ . '/../routes/web.php';
-});
+$app->router->group(
+    [
+        'namespace' => 'App\Http\Controllers',
+    ],
+    function ($router) use ($app) {
+        require __DIR__ . '/../routes/web.php';
+    }
+);
 
 return $app;

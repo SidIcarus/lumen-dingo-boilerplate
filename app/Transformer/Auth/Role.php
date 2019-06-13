@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 namespace App\Transformers\Auth;
 
 use App\Models\Auth\Role\Role;
@@ -13,13 +14,14 @@ class RoleTransformer extends BaseTransformer
      */
     protected $availableIncludes = [
     ];
+
     /**
      * List of resources to automatically include
      *
      * @var array
      */
     protected $defaultIncludes = [
-        'permissions'
+        'permissions',
     ];
 
     /**
@@ -29,7 +31,7 @@ class RoleTransformer extends BaseTransformer
      *
      * @return array
      */
-    public function transform(Role $role)
+    public function transform(Role $role): array
     {
         return [
             'id' => $role->getHashedId(),
@@ -39,7 +41,7 @@ class RoleTransformer extends BaseTransformer
 
     public function includePermissions(Role $role)
     {
-        return $this->collection($role->permissions, new PermissionTransformer);
+        return $this->collection($role->permissions, new PermissionTransformer());
     }
 
     /**

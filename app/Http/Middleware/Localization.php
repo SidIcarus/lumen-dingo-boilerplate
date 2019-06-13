@@ -1,5 +1,5 @@
-
 <?php declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use ArrayIterator;
@@ -18,7 +18,7 @@ class LocalizationMiddleware
 {
     /**
      * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
+     * @param \Closure $next
      *
      * @return mixed
      */
@@ -26,7 +26,7 @@ class LocalizationMiddleware
     {
         $locale = $this->validateLanguage($this->getLocale($request));
 
-        if (is_null($locale)) {
+        if ($locale === null) {
             // we have not found any language that is supported
             abort(Response::HTTP_PRECONDITION_FAILED, 'Unsupported Language.');
         }
@@ -35,6 +35,7 @@ class LocalizationMiddleware
 
         $response = $next($request);
         $response->headers->set('Content-Language', $locale);
+
         return $response;
     }
 
@@ -69,7 +70,7 @@ class LocalizationMiddleware
             $current_locale = $locale[0];
 
             // now check, if this locale is "supported"
-            if (array_search($current_locale, $supported_languages) !== false) {
+            if (in_array($current_locale, $supported_languages, true)) {
                 return $current_locale;
             }
 
@@ -80,19 +81,18 @@ class LocalizationMiddleware
                 $language_iterator[] = $base[0];
             }
         }
+
         return null;
     }
 
     /**
      * @return array
      */
-    private function getSupportedLanguages()
+    private function getSupportedLanguages(): array
     {
         $supported_locales = [];
 
-        $locales = config('localization.supported_languages');
-
-        foreach ($locales as $key => $value) {
+        foreach (config('localization.supported_languages') as $key => $value) {
             // it is a "simple" language code (e.g., "en")!
             if (!is_array($value)) {
                 $supported_locales[] = $value;

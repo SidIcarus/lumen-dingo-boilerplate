@@ -1,88 +1,88 @@
 {
-  "name": "lloricode/lumen-dingo-boilerplate",
-  "description": "The Lumen dingo boilerplate project.",
-  "keywords": [
-    "framework",
-    "laravel",
-    "lumen",
-    "boilerplate",
-    "dingo"
-  ],
-  "license": "MIT",
-  "type": "project",
-  "require": {
-    "php": ">=7.1.3",
-    "ext-intl": "*",
-    "ext-json": "*",
-    "ext-pdo": "*",
-    "barryvdh/laravel-cors": "^0.11.2",
-    "dingo/api": "^2.0",
-    "dusterio/lumen-passport": "^0.2.10",
-    "laravel/lumen-framework": "5.8.*",
-    "liyu/dingo-serializer-switch": "^0.3.0",
-    "prettus/l5-repository": "^2.6",
-    "spatie/laravel-permission": "^2.29",
-    "vinkla/hashids": "^5.1",
-    "vlucas/phpdotenv": "^3.3"
-  },
-  "require-dev": {
-    "barryvdh/laravel-ide-helper": "^2.5",
-    "fzaninotto/faker": "~1.4",
-    "league/flysystem": "^1.0",
-    "mockery/mockery": "~1.0",
-    "phpunit/phpunit": "~7.0|~8.0"
-  },
-  "autoload": {
-    "classmap": [
-      "database/seeds",
-      "database/factories"
+    "name": "lloricode/lumen-dingo-boilerplate",
+    "description": "The Lumen dingo boilerplate project.",
+    "keywords": [
+        "framework",
+        "laravel",
+        "lumen",
+        "boilerplate",
+        "dingo"
     ],
-    "psr-4": {
-      "Adventive\\": "app/"
-    }
-  },
-  "autoload-dev": {
-    "classmap": [
-      "tests/"
-    ]
-  },
-  "scripts": {
-    "post-root-package-install": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-    ],
-    "fresh": [
-      "@php artisan migrate:fresh --seed --ansi",
-      "@php artisan passport:install --force --ansi",
-      "@php artisan apidocs --ansi"
-    ],
-    "clear-all": [
-      "@php artisan cache:clear --ansi",
-      "@php artisan permission:cache-reset --ansi",
-      "@php -r \"!file_exists('storage/framework/cache/repository-cache-keys.json') || unlink('storage/framework/cache/repository-cache-keys.json');\"",
-      "composer dump-autoload --no-interaction --ansi --optimize"
-    ],
-    "ide-helper": [
-      "@php artisan ide-helper:generate --ansi",
-      "@php artisan ide-helper:meta --ansi"
-    ],
-    "coverage": [
-      "./vendor/bin/phpunit --coverage-html ./coverage"
-    ],
-    "coverage-txt": [
-      "./vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover"
-    ],
-    "phpunit": [
-      "./vendor/bin/phpunit --verbose > phpunit.txt -d memory_limit=2048M"
-    ],
-    "db": [
-      "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\""
-    ]
-  },
-  "config": {
-    "preferred-install": "dist",
-    "sort-packages": true,
-    "optimize-autoloader": true
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+    "license": "MIT",
+    "type": "project",
+    "require": {
+        "php": ">=7.1.3",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "barryvdh/laravel-cors": "^0.11.2",
+        "dingo/api": "^2.0",
+        "dusterio/lumen-passport": "^0.2.10",
+        "laravel/lumen-framework": "5.8.*",
+        "liyu/dingo-serializer-switch": "^0.3.0",
+        "prettus/l5-repository": "^2.6",
+        "spatie/laravel-permission": "^2.29",
+        "vinkla/hashids": "^5.1",
+        "vlucas/phpdotenv": "^3.3"
+    },
+    "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.5",
+        "fzaninotto/faker": "~1.4",
+        "league/flysystem": "^1.0",
+        "mockery/mockery": "~1.0",
+        "phpunit/phpunit": "~7.0|~8.0"
+    },
+    "autoload": {
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ],
+        "psr-4": {
+            "Adventive\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/"
+        ]
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "fresh": [
+            "@php artisan migrate:fresh --seed --ansi",
+            "@php artisan passport:install --force --ansi",
+            "@php artisan apidocs --ansi"
+        ],
+        "clear-all": [
+            "@php artisan cache:clear --ansi",
+            "@php artisan permission:cache-reset --ansi",
+            "@php -r \"!file_exists('storage/framework/cache/repository-cache-keys.json') || unlink('storage/framework/cache/repository-cache-keys.json');\"",
+            "composer dump-autoload --no-interaction --ansi --optimize"
+        ],
+        "ide-helper": [
+            "@php artisan ide-helper:generate --ansi",
+            "@php artisan ide-helper:meta --ansi"
+        ],
+        "coverage": [
+            "./vendor/bin/phpunit --coverage-html ./coverage"
+        ],
+        "coverage-txt": [
+            "./vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover"
+        ],
+        "phpunit": [
+            "./vendor/bin/phpunit --verbose > phpunit.txt -d memory_limit=2048M"
+        ],
+        "db": [
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\""
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

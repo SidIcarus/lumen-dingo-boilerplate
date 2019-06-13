@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 namespace App\Repositories\Auth\Permission;
 
 use App\Repositories\BaseRepository;
@@ -10,6 +11,9 @@ use App\Repositories\BaseRepository;
  */
 class PermissionRepositoryEloquent extends BaseRepository implements PermissionRepository
 {
+    /**
+     * @var array
+     */
     protected $fieldSearchable = [
         'name' => 'like',
     ];

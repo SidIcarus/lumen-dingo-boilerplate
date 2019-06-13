@@ -7,17 +7,16 @@ use App\Models\Auth\Role\Role;
 use Illuminate\Database\Eloquent\Model;
 use Tests\TestCase;
 
-
 abstract class BaseRole extends TestCase
 {
     /**
      * checking multiple time, to make sure caching is properly manage.
      *
-     * @param string                              $routeName
+     * @param string $routeName
      * @param \Illuminate\Database\Eloquent\Model $modelShow
      * @param \Illuminate\Database\Eloquent\Model $modelRelation
-     * @param string                              $relation
-     * @param string                              $assert
+     * @param string $relation
+     * @param string $assert
      */
     protected function showModelWithRelation(
         string $routeName,
@@ -26,9 +25,15 @@ abstract class BaseRole extends TestCase
         string $relation,
         string $assert = 'seeJson'
     ) {
-        $this->get($this->route($routeName, [
-                'id' => $modelShow->getHashedId(),
-            ]) . "?include=$relation", $this->addHeaders());
+        $this->get(
+            $this->route(
+                $routeName,
+                [
+                    'id' => $modelShow->getHashedId(),
+                ]
+            ) . "?include=$relation",
+            $this->addHeaders()
+        );
         $this->assertResponseOk();
 
         $this->seeJsonApiRelation($modelRelation, $relation, $assert);
@@ -36,25 +41,30 @@ abstract class BaseRole extends TestCase
 
     /**
      * @param \Illuminate\Database\Eloquent\Model $modelRelation
-     * @param string                              $relation
-     * @param string                              $assert
+     * @param string $relation
+     * @param string $assert
      *
      * @return mixed
      */
-    protected function seeJsonApiRelation(Model $modelRelation, string $relation, string $assert = 'seeJson')
-    {
-        return $this->{$assert}([
-            'relationships' => [
-                $relation => [
-                    'data' => [
-                        [
-                            'type' => $relation,
-                            'id' => $modelRelation->getHashedId(),
-                        ]
-                    ]
-                ]
+    protected function seeJsonApiRelation(
+        Model $modelRelation,
+        string $relation,
+        string $assert = 'seeJson'
+    ) {
+        return $this->{$assert}(
+            [
+                'relationships' => [
+                    $relation => [
+                        'data' => [
+                            [
+                                'type' => $relation,
+                                'id' => $modelRelation->getHashedId(),
+                            ],
+                        ],
+                    ],
+                ],
             ]
-        ]);
+        );
     }
 
     protected function getByRoleName(string $accessRoleName = 'system'): Role
@@ -72,16 +82,19 @@ abstract class BaseRole extends TestCase
 
     protected function createRole($name = 'test role name'): Role
     {
-        return app(config('permission.models.role'))::create([
-            'name' => $name,
-        ]);
+        return app(config('permission.models.role'))::create(
+            [
+                'name' => $name,
+            ]
+        );
     }
 
     protected function createPermission($name = 'test permission name'): Permission
     {
-        return app(config('permission.models.permission'))::create([
-            'name' => $name,
-        ]);
+        return app(config('permission.models.permission'))::create(
+            [
+                'name' => $name,
+            ]
+        );
     }
-
 }

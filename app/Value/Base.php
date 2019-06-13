@@ -1,9 +1,15 @@
 <?php declare(strict_types=1);
-namespace App\Values;
 
-use App\Traits\Hashable;
+namespace App\Value;
 
-abstract class Value
+use App\Quality\Hashable;
+
+/**
+ * Abstract Base Value Class
+ *
+ * @package Adventive\Value
+ */
+abstract class Base
 {
     use Hashable;
 }

@@ -13,7 +13,9 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Auth\User\UserRepository;
 use App\Transformers\Auth\UserTransformer;
 use Dingo\Api\Http\Request;
+use Dingo\Api\Http\Response;
 use Prettus\Repository\Criteria\RequestCriteria;
+use Prettus\Repository\Exceptions\RepositoryException;
 
 /**
  * Class UserDeleteController
@@ -22,6 +24,9 @@ use Prettus\Repository\Criteria\RequestCriteria;
  */
 class UserDeleteController extends Controller
 {
+    /**
+     * @var UserRepository
+     */
     protected $userRepository;
 
     /**
@@ -33,7 +38,10 @@ class UserDeleteController extends Controller
     {
         $permissions = $userRepository->makeModel()::PERMISSIONS;
 
-        $this->middleware('permission:' . $permissions['deleted list'], ['only' => 'deleted']);
+        $this->middleware(
+            'permission:' . $permissions['deleted list'],
+            ['only' => 'deleted']
+        );
         $this->middleware('permission:' . $permissions['restore'], ['only' => 'restore']);
         $this->middleware('permission:' . $permissions['purge'], ['only' => 'purge']);
 
@@ -41,6 +49,10 @@ class UserDeleteController extends Controller
     }
 
     /**
+     * @param string $id
+     *
+     * @return Response
+     * @throws RepositoryException
      * @api                {put} /auth/users/{id}/restore Restore user
      * @apiName            restore-user
      * @apiGroup           UserDelete
@@ -48,18 +60,18 @@ class UserDeleteController extends Controller
      * @apiPermission      Authenticated User
      * @apiUse             UserResponse
      *
-     * @param string $id
-     *
-     * @return \Dingo\Api\Http\Response
-     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
-    public function restore(string $id)
+    public function restore(string $id): Response
     {
         $user = $this->userRepository->restore($this->decodeHash($id));
-        return $this->item($user, new UserTransformer);
+
+        return $this->item($user, new UserTransformer());
     }
 
     /**
+     * @param \Dingo\Api\Http\Request $request
+     *
+     * @return Response
      * @api                {get} /auth/users/deleted Get all deleted users
      * @apiName            get-all-deleted-users
      * @apiGroup           UserDelete
@@ -67,18 +79,23 @@ class UserDeleteController extends Controller
      * @apiPermission      Authenticated User
      * @apiUse             UsersDeletedResponse
      *
-     * @param \Dingo\Api\Http\Request $request
-     *
-     * @return \Dingo\Api\Http\Response
      */
-    public function deleted(Request $request)
+    public function deleted(Request $request): Response
     {
-        $this->userRepository->pushCriteria(new OnlyTrashedCriteria);
+        $this->userRepository->pushCriteria(new OnlyTrashedCriteria());
         $this->userRepository->pushCriteria(new RequestCriteria($request));
-        return $this->paginatorOrCollection($this->userRepository->paginate(), new UserTransformer);
+
+        return $this->paginatorOrCollection(
+            $this->userRepository->paginate(),
+            new UserTransformer()
+        );
     }
 
     /**
+     * @param string $id
+     *
+     * @return Response
+     * @throws RepositoryException
      * @api                {delete} /auth/users/{id} Purge user
      * @apiName            purge-user
      * @apiGroup           UserDelete
@@ -86,14 +103,11 @@ class UserDeleteController extends Controller
      * @apiPermission      Authenticated User
      * @apiUse             NoContentResponse
      *
-     * @param string $id
-     *
-     * @return \Dingo\Api\Http\Response
-     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
-    public function purge(string $id)
+    public function purge(string $id): Response
     {
         $this->userRepository->forceDelete($this->decodeHash($id));
+
         return $this->response->noContent();
     }
 }

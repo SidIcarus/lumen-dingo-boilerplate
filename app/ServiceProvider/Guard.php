@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 namespace App\Providers;
 
 use Dingo\Api\Auth\Provider\Authorization;
@@ -18,10 +19,11 @@ class GuardServiceProvider extends Authorization
                 'Unable to authenticate with invalid API key and token.'
             );
         }
+
         return $user;
     }
 
-    public function getAuthorizationMethod()
+    public function getAuthorizationMethod(): string
     {
         return 'bearer';
     }
