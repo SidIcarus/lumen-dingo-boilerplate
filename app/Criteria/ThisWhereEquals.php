@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace App\Criterion\Eloquent;
 
 use Prettus\Repository\Contracts\CriteriaInterface;

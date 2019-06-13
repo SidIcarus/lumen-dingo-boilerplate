@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace App\Transformers;
 
 use App\Values\Localizations\Localization;

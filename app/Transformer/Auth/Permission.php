@@ -1,5 +1,5 @@
 
-<?php
+<?php declare(strict_types=1);
 namespace App\Transformers\Auth;
 
 use App\Models\Auth\Permission\Permission;

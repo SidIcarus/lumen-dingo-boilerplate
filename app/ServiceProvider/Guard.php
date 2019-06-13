@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace App\Providers;
 
 use Dingo\Api\Auth\Provider\Authorization;
