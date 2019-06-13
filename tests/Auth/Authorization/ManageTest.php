@@ -12,9 +12,7 @@ class ManageTest extends BaseRole
         $this->loggedInAs();
     }
 
-    /**
-     * @test
-     */
+
     public function assignRoleToUser()
     {
         $user = factory(User::class)->create();
@@ -41,9 +39,7 @@ class ManageTest extends BaseRole
 //        $this->showModelWithRelation('backend.users.show', $user, $role, 'roles');
     }
 
-    /**
-     * @test
-     */
+
     public function revokeRoleFromUser()
     {
         $user = factory(User::class)->create();
@@ -67,9 +63,7 @@ class ManageTest extends BaseRole
 //        $this->showModelWithRelation('backend.users.show', $user, $role, 'roles', 'dontSeeJson');
     }
 
-    /**
-     * @test
-     */
+
     public function assignPermissionToUser()
     {
         $user = factory(User::class)->create();
@@ -97,9 +91,7 @@ class ManageTest extends BaseRole
 //        $this->showModelWithRelation('backend.users.show', $user, $permission, 'permissions');
     }
 
-    /**
-     * @test
-     */
+
     public function revokePermissionToUser()
     {
         $user = factory(User::class)->create();
@@ -124,9 +116,7 @@ class ManageTest extends BaseRole
 //        $this->showModelWithRelation('backend.users.show', $user, $permission, 'permissions', 'dontSeeJson');
     }
 
-    /**
-     * @test
-     */
+
     public function attachPermissionToRole()
     {
         $role = $this->createRole();
@@ -154,9 +144,7 @@ class ManageTest extends BaseRole
 //        $this->showModelWithRelation('backend.roles.show', $role, $permission, 'permissions');
     }
 
-    /**
-     * @test
-     */
+
     public function revokePermissionFromRole()
     {
         $role = $this->createRole();

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Providers;
+namespace App\ServiceProvider;
 
 use DB;
 use Dusterio\LumenPassport\LumenPassport;
@@ -12,11 +12,7 @@ use Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
+
     public function register(): void
     {
         if (!(DB::connection()->getPdo()->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql'
@@ -31,14 +27,20 @@ class AppServiceProvider extends ServiceProvider
         LumenPassport::routes(
             $this->app->router,
             [
-//            'prefix' => 'v1/oauth',
+                // 'prefix' => 'v1/oauth',
             ]
         );
+
         LumenPassport::tokensExpireIn(
-            Carbon::now()->addMinutes(config('setting.api.token.access_token_expire'))
+            Carbon::now()->addMinutes(
+                config('setting.api.token.access_token_expire')
+            )
         );
+
         Passport::refreshTokensExpireIn(
-            Carbon::now()->addMinutes(config('setting.api.token.refresh_token_expire'))
+            Carbon::now()->addMinutes(
+                config('setting.api.token.refresh_token_expire')
+            )
         );
     }
 }

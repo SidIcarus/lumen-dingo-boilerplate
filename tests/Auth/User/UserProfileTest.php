@@ -6,16 +6,7 @@ use Tests\TestCase;
 
 class UserProfileTest extends TestCase
 {
-    /**
-     * @param $roleName
-     * @param $status
-     *
-     * @test
-     * @testWith ["system", 200]
-     *          ["admin", 200]
-     *          ["user", 200]
-     *          ["", 401]
-     */
+
     public function getProfile($roleName, $status)
     {
         if (!empty($roleName)) {

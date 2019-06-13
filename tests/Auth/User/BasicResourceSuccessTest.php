@@ -7,9 +7,7 @@ use Tests\TestCase;
 
 class BasicResourceSuccessTest extends TestCase
 {
-    /**
-     * @test
-     */
+
     public function storeUser()
     {
         $this->loggedInAs();
@@ -28,9 +26,7 @@ class BasicResourceSuccessTest extends TestCase
         $this->seeJson($data);
     }
 
-    /**
-     * @test
-     */
+
     public function updateUser()
     {
         $this->loggedInAs();
@@ -54,9 +50,7 @@ class BasicResourceSuccessTest extends TestCase
         $this->seeJson($data);
     }
 
-    /**
-     * @test
-     */
+
     public function destroyUser()
     {
         $this->loggedInAs();
@@ -79,9 +73,7 @@ class BasicResourceSuccessTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+
     public function showUser()
     {
         $this->loggedInAs();

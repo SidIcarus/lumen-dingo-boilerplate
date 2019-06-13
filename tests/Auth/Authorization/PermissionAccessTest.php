@@ -4,15 +4,7 @@ namespace Tests\Auth\Authorization;
 
 class PermissionAccessTest extends BaseRole
 {
-    /**
-     * @param $method
-     * @param $uri
-     * @param $roleName
-     * @param $statusCode
-     *
-     * @test
-     * @dataProvider dataResources
-     */
+
     public function access($method, $uri, $roleName, $statusCode)
     {
         if (!empty($roleName)) {

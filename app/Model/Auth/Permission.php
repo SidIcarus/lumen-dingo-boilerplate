@@ -8,11 +8,7 @@ class Permission extends \Spatie\Permission\Models\Permission
 {
     use Hashable;
 
-    /**
-     * all permissions
-     *
-     * name => value
-     */
+
     const PERMISSIONS = [
         'index' => 'permission index',
         'show' => 'permission show',

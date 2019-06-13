@@ -1,52 +1,39 @@
 <?php declare(strict_types=1);
 
-namespace App\Repositories;
+namespace App\Repository;
 
-use App\Criterion\Eloquent\OnlyTrashedCriteria;
+use App\Criteria\OnlyTrashed as OnlyTrashedCriteria;
 use Illuminate\Support\Arr;
 use Prettus\Repository\Contracts\CacheableInterface;
-use Prettus\Repository\Eloquent\BaseRepository as BaseRepo;
+use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Events\RepositoryEntityUpdated;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Repository\Traits\CacheableRepository;
 
-abstract class BaseRepository extends BaseRepo implements CacheableInterface
+abstract class Base extends BaseRepository implements CacheableInterface
 {
     use CacheableRepository {
         paginate as protected paginateExtend;
     }
 
-    /**
-     * @param $id
-     *
-     * @return mixed
-     * @throws RepositoryException
-     */
+
     public function restore($id)
     {
         return $this->manageDeletes($id, 'restore');
     }
 
-    /**
-     * @param int $id
-     *
-     * @return mixed
-     * @throws RepositoryException
-     */
+
     public function forceDelete(int $id)
     {
         return $this->manageDeletes($id, 'forceDelete');
     }
 
-    /**
-     * @param null $limit
-     * @param array $columns
-     * @param string $method
-     *
-     * @return mixed
-     */
-    public function paginate($limit = null, $columns = ['*'], $method = "paginate")
-    {
+
+    public function paginate(
+        $limit = null,
+        $columns = ['*'],
+        $method = 'paginate'
+    ) {
         // ignore all when limit already specify
         if ($limit !== null) {
             return $this->paginateExtend($limit, $columns, $method);
@@ -56,13 +43,14 @@ abstract class BaseRepository extends BaseRepo implements CacheableInterface
         $requestLimit = app('request')->get('limit');
 
         if ($requestLimit !== null) {
-            $limit = ($requestLimit >= 0
-                && $requestLimit
-                <= $repoPaginationConfig['limit_pagination'])
+            $limit = $requestLimit >= 0
+            && $requestLimit
+            <= $repoPaginationConfig['limit_pagination']
                 ? $requestLimit : null;
         }
 
-        if ($limit == '0' && $repoPaginationConfig['skip_pagination'] === true) {
+        if ($limit == '0'
+            && $repoPaginationConfig['skip_pagination'] === true) {
             return $this->all($columns);
         }
 
@@ -73,10 +61,7 @@ abstract class BaseRepository extends BaseRepo implements CacheableInterface
         return $this->paginateExtend($limit, $columns, $method);
     }
 
-    /**
-     * @return array
-     * @throws RepositoryException
-     */
+
     public function getFieldsSearchable(): array
     {
         $model = $this->makeModel();
@@ -85,15 +70,19 @@ abstract class BaseRepository extends BaseRepo implements CacheableInterface
             ->getColumnListing($model->getTable());
 
         $fieldSearchable = array_map(
-            function () {
+            function () : string {
                 return 'like';
             },
             array_flip($tableColumns)
         );
 
-        Arr::forget($fieldSearchable, ['id', 'created_at', 'updated_at', 'deleted_at']);
+        Arr::forget(
+            $fieldSearchable,
+            ['id', 'created_at', 'updated_at', 'deleted_at']
+        );
 
-        return parent::getFieldsSearchable() + collect($fieldSearchable)
+        return parent::getFieldsSearchable()
+            + collect($fieldSearchable)
                 ->filter(
                     function ($value, $key) {
                         // polymorphic
@@ -112,13 +101,7 @@ abstract class BaseRepository extends BaseRepo implements CacheableInterface
                 )->toArray();
     }
 
-    /**
-     * @param int $id
-     * @param string $method
-     *
-     * @return mixed
-     * @throws RepositoryException
-     */
+
     private function manageDeletes(int $id, string $method)
     {
         $this->applyScope();

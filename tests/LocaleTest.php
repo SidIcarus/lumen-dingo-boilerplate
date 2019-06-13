@@ -9,9 +9,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class LocaleTest extends TestCase
 {
-    /**
-     * @test
-     */
+
     public function getAll()
     {
         Passport::actingAs(factory(User::class)->create());
@@ -25,15 +23,7 @@ class LocaleTest extends TestCase
             ->assertResponseOk();
     }
 
-    /**
-     * @param string|null $locale
-     *
-     * @test
-     * @testWith ["en"]
-     *           [null]
-     *           ["xxx"]
-     *           ["xxx,fr"]
-     */
+
     public function checkAllLocale(string $locale = null)
     {
         $headers = [
@@ -78,13 +68,7 @@ class LocaleTest extends TestCase
         );
     }
 
-    /**
-     * Creates the application.
-     *
-     * Needs to be implemented by subclasses.
-     *
-     * @return HttpKernelInterface
-     */
+
     public function createApplication()
     {
         return require __DIR__ . '/../bootstrap/app.php';

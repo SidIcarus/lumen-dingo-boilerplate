@@ -12,17 +12,7 @@ class RepositoryTest extends TestCase
         $this->loggedInAs();
     }
 
-    /**
-     * @param bool $enableSkip
-     * @param int $limitRequest
-     * @param int $limitDefault
-     * @param int $addRoleCount
-     * @param int $expectedCount
-     * @param string|null $queryParamLimit
-     *
-     * @test
-     * @dataProvider paginateDataProvider()
-     */
+
     public function paginationEnableSkipThenLimitZero(
         bool $enableSkip,
         int $limitRequest,
@@ -63,19 +53,10 @@ class RepositoryTest extends TestCase
         );
     }
 
-    /**
-     * @return array
-     */
+
     public function paginateDataProvider()
     {
-        /**
-         * 1 bool $enableSkip,
-         * 2 int $limitRequest,
-         * 3 int $limitDefault,
-         * 4 int $addRoleCount,
-         * 5 int $expectedCount,
-         * 6 string $queryParamLimit = null
-         */
+
         return [
             'default behavior' => [true, 100, 15, 20, 15],
             'default behavior with disable skip' => [false, 100, 15, 20, 15],

@@ -3,15 +3,14 @@
 return [
     'permission' => [
         'role_names' => [
-            'system' => 'system',
             'admin' => 'admin',
+            'system' => 'system',
         ],
         'permission_names' => [
-            'view_backend' => 'view backend',
             'manage_authorization' => 'manage authorization',
+            'view_backend' => 'view backend',
         ],
     ],
-
     'api' => [
         'throttle' => [
             'expires' => 1,
@@ -22,17 +21,15 @@ return [
             'refresh_token_expire' => 60 * 24 * 2, // 2days
         ],
     ],
-
     'repository' => [
-        'skip_pagination' => true,
         'limit_pagination' => 100,
+        'skip_pagination' => true,
     ],
-
     'formats' => [
         'date' => 'd/m/Y',
-        'time_12' => 'h:i:s A',
-        'time_24' => 'H:i:s',
         'datetime_12' => 'd/m/Y h:i:s A',
         'datetime_24' => 'd/m/Y H:i:s',
+        'time_12' => 'h:i:s A',
+        'time_24' => 'H:i:s',
     ],
 ];

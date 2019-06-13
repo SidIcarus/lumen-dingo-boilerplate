@@ -7,31 +7,17 @@ use App\Transformers\BaseTransformer;
 
 class UserTransformer extends BaseTransformer
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
+
     protected $availableIncludes = [
         'roles',
         'permissions',
     ];
 
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
+
     protected $defaultIncludes = [
     ];
 
-    /**
-     * A Fractal transformer.
-     *
-     * @param \App\Models\Auth\User\User $user
-     *
-     * @return array
-     */
+
     public function transform(User $user): array
     {
         $response = [
@@ -61,9 +47,7 @@ class UserTransformer extends BaseTransformer
         return $this->collection($user->permissions, new PermissionTransformer());
     }
 
-    /**
-     * @return string
-     */
+
     public function getResourceKey(): string
     {
         return 'users';

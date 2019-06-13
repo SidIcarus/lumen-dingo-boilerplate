@@ -7,9 +7,7 @@ use Tests\TestCase;
 
 class BasicResourceFailedTest extends TestCase
 {
-    /**
-     * @test
-     */
+
     public function cannotDeleteSelf()
     {
         $user = $this->loggedInAs();
@@ -28,13 +26,7 @@ class BasicResourceFailedTest extends TestCase
         );
     }
 
-    /**
-     * @param $environment
-     *
-     * @test
-     * @testWith ["production"]
-     *      ["local"]
-     */
+
     public function getUserWithWrongHashedId($environment)
     {
         putenv("APP_ENV=$environment");
@@ -61,9 +53,7 @@ class BasicResourceFailedTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+
     public function getNoneExistedUser()
     {
         $this->loggedInAs();

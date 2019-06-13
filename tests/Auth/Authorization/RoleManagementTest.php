@@ -4,13 +4,7 @@ namespace Tests\Auth\Authorization;
 
 class RoleManagementTest extends BaseRole
 {
-    /**
-     * @param $routeName
-     *
-     * @test
-     * @testWith ["store"]
-     *          ["update"]
-     */
+
     public function validationRole($routeName)
     {
         $this->loggedInAs();
@@ -44,14 +38,7 @@ class RoleManagementTest extends BaseRole
         );
     }
 
-    /**
-     * @param $verbMethod
-     * @param $routeName
-     *
-     * @test
-     * @testWith ["delete", "backend.roles.destroy"]
-     *          ["put", "backend.roles.update"]
-     */
+
     public function defaultRoleNotAllowed($verbMethod, $routeName)
     {
         $this->loggedInAs();
@@ -73,9 +60,7 @@ class RoleManagementTest extends BaseRole
         );
     }
 
-    /**
-     * @test
-     */
+
     public function storeRoleSuccess()
     {
         $this->loggedInAs();
@@ -89,9 +74,7 @@ class RoleManagementTest extends BaseRole
         $this->seeJson($data);
     }
 
-    /**
-     * @test
-     */
+
     public function updateRoleSuccess()
     {
         $this->loggedInAs();
@@ -118,9 +101,7 @@ class RoleManagementTest extends BaseRole
         $this->seeJson($data);
     }
 
-    /**
-     * @test
-     */
+
     public function updateDuplicateRole()
     {
         $this->loggedInAs();
@@ -153,9 +134,7 @@ class RoleManagementTest extends BaseRole
         );
     }
 
-    /**
-     * @test
-     */
+
     public function storeDuplicateRole()
     {
         $this->loggedInAs();

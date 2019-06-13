@@ -7,11 +7,7 @@ class UsersTableSeeder extends Seeder
 {
     use SeederHelper;
 
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+
     public function run()
     {
         $system = factory(User::class)->create(

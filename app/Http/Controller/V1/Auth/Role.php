@@ -1,10 +1,5 @@
 <?php declare(strict_types=1);
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 12/16/18
- * Time: 11:25 AM
- */
+
 
 namespace App\Http\Controllers\V1\Backend\Auth\Role;
 
@@ -17,23 +12,13 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
-/**
- * Class RoleController
- *
- * @package App\Http\Controllers\V1\Backend\Auth\Role
- */
+
 class RoleController extends Controller
 {
-    /**
-     * @var RoleRepository
-     */
+
     protected $roleRepository;
 
-    /**
-     * RoleController constructor.
-     *
-     * @param \App\Repositories\Auth\Role\RoleRepository $roleRepository
-     */
+
     public function __construct(RoleRepository $roleRepository)
     {
         $permissions = $roleRepository->makeModel()::PERMISSIONS;
@@ -47,18 +32,7 @@ class RoleController extends Controller
         $this->roleRepository = $roleRepository;
     }
 
-    /**
-     * @param \Dingo\Api\Http\Request $request
-     *
-     * @return Response
-     * @api                {get} /auth/roles Get all roles
-     * @apiName            get-all-roles
-     * @apiGroup           Role
-     * @apiVersion         1.0.0
-     * @apiPermission      Authenticated User
-     * @apiUse             RolesResponse
-     *
-     */
+
     public function index(Request $request): Response
     {
         $this->roleRepository->pushCriteria(new RequestCriteria($request));
@@ -69,19 +43,7 @@ class RoleController extends Controller
         );
     }
 
-    /**
-     * @param \Dingo\Api\Http\Request $request
-     *
-     * @return Response
-     * @api                {post} /auth/roles Store role
-     * @apiName            store-role
-     * @apiGroup           Role
-     * @apiVersion         1.0.0
-     * @apiPermission      Authenticated User
-     * @apiUse             RoleCreatedResponse
-     * @apiParam {String} name (required)
-     *
-     */
+
     public function store(Request $request): Response
     {
         $role = $this->roleRepository->create(
@@ -93,19 +55,7 @@ class RoleController extends Controller
         return $this->item($role, new RoleTransformer())->statusCode(201);
     }
 
-    /**
-     * @param \Dingo\Api\Http\Request $request
-     * @param string $id
-     *
-     * @return Response
-     * @api                {post} /auth/roles/{id} Show role
-     * @apiName            show-role
-     * @apiGroup           Role
-     * @apiVersion         1.0.0
-     * @apiPermission      Authenticated User
-     * @apiUse             RoleResponse
-     *
-     */
+
     public function show(Request $request, string $id): Response
     {
         $this->roleRepository->pushCriteria(new RequestCriteria($request));
@@ -114,22 +64,7 @@ class RoleController extends Controller
         return $this->item($role, new RoleTransformer());
     }
 
-    /**
-     * @param \Dingo\Api\Http\Request $request
-     * @param string $id
-     *
-     * @return Response
-     * @throws RepositoryException
-     * @throws ValidatorException
-     * @api                {put} /auth/roles Update role
-     * @apiName            update-role
-     * @apiGroup           Role
-     * @apiVersion         1.0.0
-     * @apiPermission      Authenticated User
-     * @apiUse             RoleResponse
-     * @apiParam {String} name
-     *
-     */
+
     public function update(Request $request, string $id): Response
     {
         $role = $this->roleRepository->update(
@@ -142,18 +77,7 @@ class RoleController extends Controller
         return $this->item($role, new RoleTransformer());
     }
 
-    /**
-     * @param string $id
-     *
-     * @return Response
-     * @api                {delete} /auth/roles/{id} Destroy role
-     * @apiName            destroy-role
-     * @apiGroup           Role
-     * @apiVersion         1.0.0
-     * @apiPermission      Authenticated User
-     * @apiUse             NoContentResponse
-     *
-     */
+
     public function destroy(string $id): Response
     {
         $this->roleRepository->delete($this->decodeHash($id));

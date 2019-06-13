@@ -4,25 +4,15 @@ namespace App\Repositories\Auth\Permission;
 
 use App\Repositories\BaseRepository;
 
-/**
- * Class PermissionRepositoryEloquent
- *
- * @package App\Repositories\Auth\Permission
- */
+
 class PermissionRepositoryEloquent extends BaseRepository implements PermissionRepository
 {
-    /**
-     * @var array
-     */
+
     protected $fieldSearchable = [
         'name' => 'like',
     ];
 
-    /**
-     * Specify Model class name
-     *
-     * @return string
-     */
+
     public function model()
     {
         return config('permission.models.permission');

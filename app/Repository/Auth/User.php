@@ -8,27 +8,17 @@ use Prettus\Repository\Events\RepositoryEntityUpdated;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
 
-/**
- * Class UserRepositoryEloquent
- *
- * @package App\Repositories\Auth\User
- */
+
 class UserRepositoryEloquent extends BaseRepository implements UserRepository
 {
-    /**
-     * @var array
-     */
+
     protected $fieldSearchable = [
         'first_name' => 'like',
         'last_name' => 'like',
         'email' => 'like',
     ];
 
-    /**
-     * Specify Validator Rules
-     *
-     * @var array
-     */
+
     protected $rules = [
         ValidatorInterface::RULE_CREATE => [
             'first_name' => 'required|string',
@@ -43,24 +33,13 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
         ],
     ];
 
-    /**
-     * Specify Model class name
-     *
-     * @return string
-     */
+
     public function model()
     {
         return User::class;
     }
 
-    /**
-     * Save a new entity in repository
-     *
-     * @param array $attributes
-     *
-     * @return mixed
-     * @throws ValidatorException
-     */
+
     public function create(array $attributes)
     {
         $attributes['password'] = app('hash')->make($attributes['password']);
@@ -68,12 +47,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
         return parent::create($attributes);
     }
 
-    /**
-     * @param $id
-     * @param int $roleId
-     *
-     * @return mixed
-     */
+
     public function assignRole($id, int $roleId)
     {
         $user = $this->find($id);
@@ -82,10 +56,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
         return $user;
     }
 
-    /**
-     * @param $id
-     * @param int $permissionId
-     */
+
     public function givePermissionTo($id, int $permissionId)
     {
         event(
@@ -96,10 +67,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
         );
     }
 
-    /**
-     * @param $id
-     * @param int $roleId
-     */
+
     public function removeRole($id, int $roleId)
     {
         $user = $this->find($id);
@@ -107,10 +75,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
         event(new RepositoryEntityUpdated($this, $user));
     }
 
-    /**
-     * @param $id
-     * @param int $permissionId
-     */
+
     public function revokePermissionTo($id, int $permissionId)
     {
         $user = $this->find($id);

@@ -8,36 +8,22 @@ use Symfony\Component\Process\Process;
 
 class GenerateDocumentationCommand extends Command
 {
-    /**
-     *
-     */
+
     protected const APIDOCS_FILENAME = 'apidoc.json';
 
-    /**
-     * @var array
-     */
+
     protected $docInputs = [
         'app/Http/Controllers',
         'resources/documentation/responses',
     ];
 
-    /**
-     * @var array
-     */
+
     protected $config;
 
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
+
     protected $signature = "apidocs {--vrbs : Verbose of apidoc}";
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = "Generate API Blueprint Documentation.";
 
     public function __construct()
@@ -54,10 +40,7 @@ class GenerateDocumentationCommand extends Command
         ];
     }
 
-    /**
-     * Execute the console command.
-     *
-     */
+
     public function handle(): void
     {
         $this->info('Generating API Blueprint Documentation ...');

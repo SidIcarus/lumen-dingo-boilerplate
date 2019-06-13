@@ -7,9 +7,7 @@ use Tests\TestCase;
 
 class UserValidationTest extends TestCase
 {
-    /**
-     * @test
-     */
+
     public function uniqueEmail()
     {
         $this->loggedInAs();

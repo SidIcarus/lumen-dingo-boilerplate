@@ -1,35 +1,28 @@
 <?php declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controller;
 
-use App\Traits\Hashable;
-use App\Transformers\BaseTransformer;
+use App\Quality\Hashable;
+use App\Transformer\Base as Transformer;
 use Closure;
 use Dingo\Api\Http\Response;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
-use Laravel\Lumen\Routing\Controller as BaseController;
+use Laravel\Lumen\Routing\Controller;
 
-class Controller extends BaseController
+class Base extends Controller
 {
     use Hashable;
     use Helpers;
 
-    /**
-     * @param $paginatorOrCollection
-     * @param $transformer
-     * @param array $parameters
-     * @param \Closure|null $after
-     *
-     * @return \Dingo\Api\Http\Response
-     */
+
     protected function paginatorOrCollection(
         $paginatorOrCollection,
         $transformer,
         array $parameters = [],
-        Closure $after = null
+        ?Closure $after = null
     ): Response {
         $method = '';
         if ($paginatorOrCollection instanceof Paginator) {
@@ -40,75 +33,49 @@ class Controller extends BaseController
             $method = 'collection';
         }
 
-        $parameters = $this->addResourceKey($transformer, $parameters);
-
         $response = $this->{$method}(
             $paginatorOrCollection,
             $transformer,
-            $parameters,
+            $this->addResourceKey($transformer, $parameters),
             $after
         );
 
         return $this->addAvailableIncludes($response, $transformer);
     }
 
-    /**
-     * @param $item
-     * @param \App\Transformers\BaseTransformer $transformer
-     * @param array $parameters
-     * @param \Closure|null $after
-     *
-     * @return \Dingo\Api\Http\Response
-     */
+
     protected function item($item, $transformer, $parameters = [], Closure $after = null): Response
     {
-        $parameters = $this->addResourceKey($transformer, $parameters);
-
-        $response = $this->response->item($item, $transformer, $parameters, $after);
+        $response = $this->response->item(
+            $item, $transformer,  $this->addResourceKey($transformer, $parameters), $after
+        );
 
         return $this->addAvailableIncludes($response, $transformer);
     }
 
-    /**
-     * @param $transformer
-     * @param $parameters
-     *
-     * @return array
-     */
-    private function addResourceKey($transformer, $parameters): array
-    {
-        $parameters += [
-            'key' => $this->checkTransformer($transformer)->getResourceKey(),
-        ];
 
-        return $parameters;
+    private function addResourceKey(
+        $transformer,
+        array $parameters
+    ): array {
+        $resourceKey = $this->checkTransformer($transformer)->getResourceKey();
+
+        return $parameters + ['key' => $resourceKey];
     }
 
-    /**
-     * @param $transformer
-     *
-     * @return \App\Transformers\BaseTransformer
-     */
-    private function checkTransformer($transformer): BaseTransformer
-    {
-        if (is_string($transformer)) {
-            $transformer = app($transformer);
-        }
 
-        return $transformer;
-    }
-
-    /**
-     * @param \Dingo\Api\Http\Response $response
-     * @param $transformer
-     *
-     * @return \Dingo\Api\Http\Response
-     */
-    private function addAvailableIncludes(Response $response, $transformer): Response
-    {
+    private function addAvailableIncludes(
+        Response $response,
+        $transformer
+    ): Response {
         return $response->addMeta(
             'include',
             $this->checkTransformer($transformer)->getAvailableIncludes()
         );
+    }
+
+    private function checkTransformer($transformer): Transformer
+    {
+        return is_string($transformer) ? app($transformer) : $transformer;
     }
 }

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Http\Middleware;
+namespace Adventive\Http\Middleware;
 
 use ArrayIterator;
 use Closure;
@@ -8,21 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Class LocalizationMiddleware
- *
- * @package App\Http\Middleware
- * @reference https://github.com/apiato/apiato/blob/master/app/Containers/Localization/Middlewares/LocalizationMiddleware.php
- */
-class LocalizationMiddleware
+final class Localization
 {
-    /**
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure $next
-     *
-     * @return mixed
-     */
-    public function handle(Request $request, Closure $next)
+
+    public function handle(Request $request, Closure $next): Response
     {
         $locale = $this->validateLanguage($this->getLocale($request));
 
@@ -39,26 +28,14 @@ class LocalizationMiddleware
         return $response;
     }
 
-    /**
-     * @param $requestLanguages
-     *
-     * @return mixed
-     */
-    private function validateLanguage($requestLanguages)
-    {
-        /*
-         * be sure to check $lang of the format "de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4"
-         * this means:
-         *  1) give me de-DE if it is available
-         *  2) otherwise, give me de
-         *  3) otherwise, give me en-US
-         *  4) if all fails, give me en
-        */
 
+    private function validateLanguage($requestLanguages): ?string
+    {
         // split it up by ","
         $languages = explode(',', $requestLanguages);
 
-        // we need an ArrayIterator because we will be extending the FOREACH below dynamically!
+        // we need an ArrayIterator because we will be extending the FOREACH
+        // below dynamically!
         $language_iterator = new ArrayIterator($languages);
 
         $supported_languages = $this->getSupportedLanguages();
@@ -76,7 +53,8 @@ class LocalizationMiddleware
 
             // now check, if the language to be checked is in the form of de-DE
             if (Str::contains($current_locale, '-')) {
-                // extract the "main" part ("de") and append it to the end of the languages to be checked
+                // extract the "main" part ("de") and append it to the end of
+                // the languages to be checked
                 $base = explode('-', $current_locale);
                 $language_iterator[] = $base[0];
             }
@@ -85,9 +63,15 @@ class LocalizationMiddleware
         return null;
     }
 
-    /**
-     * @return array
-     */
+
+    private function getLocale(Request $request): string
+    {
+        return $request->hasHeader('Accept-Language')
+            ? $request->header('Accept-Language')
+            : config('app.locale');
+    }
+
+
     private function getSupportedLanguages(): array
     {
         $supported_locales = [];
@@ -100,7 +84,7 @@ class LocalizationMiddleware
 
             // it is a combined language-code (e.g., "en-US")
             if (is_array($value)) {
-                foreach ($value as $k => $v) {
+                foreach ($value as $v) {
                     $supported_locales[] = $v;
                 }
                 $supported_locales[] = $key;
@@ -108,17 +92,5 @@ class LocalizationMiddleware
         }
 
         return $supported_locales;
-    }
-
-    /**
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return string
-     */
-    private function getLocale(Request $request): string
-    {
-        return $request->hasHeader('Accept-Language')
-            ? $request->header('Accept-Language')
-            : config('app.locale');
     }
 }

@@ -9,15 +9,7 @@ use Tests\TestCase;
 
 abstract class BaseRole extends TestCase
 {
-    /**
-     * checking multiple time, to make sure caching is properly manage.
-     *
-     * @param string $routeName
-     * @param \Illuminate\Database\Eloquent\Model $modelShow
-     * @param \Illuminate\Database\Eloquent\Model $modelRelation
-     * @param string $relation
-     * @param string $assert
-     */
+
     protected function showModelWithRelation(
         string $routeName,
         Model $modelShow,
@@ -39,13 +31,7 @@ abstract class BaseRole extends TestCase
         $this->seeJsonApiRelation($modelRelation, $relation, $assert);
     }
 
-    /**
-     * @param \Illuminate\Database\Eloquent\Model $modelRelation
-     * @param string $relation
-     * @param string $assert
-     *
-     * @return mixed
-     */
+
     protected function seeJsonApiRelation(
         Model $modelRelation,
         string $relation,

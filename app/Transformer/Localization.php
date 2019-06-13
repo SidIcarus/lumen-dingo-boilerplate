@@ -1,45 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace App\Transformers;
+namespace App\Transformer;
 
-use App\Values\Localizations\Localization;
+use App\Transformer\Base as Transformer;
+use App\Value\Localization as Model;
 
-class LocalizationTransformer extends BaseTransformer
+class Localization extends Transformer
 {
-    /**
-     * @var  array
-     */
-    protected $defaultIncludes = [
+    public function getResourceKey(): string { return 'localizations'; }
 
-    ];
-
-    /**
-     * @var  array
-     */
-    protected $availableIncludes = [
-
-    ];
-
-    /**
-     * @param Localization $entity
-     *
-     * @return array
-     */
-    public function transform(Localization $entity): array
+    public function transform(Model $model): array
     {
-        $response = [
-            'id' => $entity->getLanguage(),
-
-            'language' => [
-                'code' => $entity->getLanguage(),
-                'default_name' => $entity->getDefaultName(),
-                'locale_name' => $entity->getLocaleName(),
-            ],
-        ];
-
         // now we manually build the regions
         $regions = [];
-        foreach ($entity->getRegions() as $region) {
+        foreach ($model->getRegions() as $region) {
             $regions[] = [
                 'code' => $region->getRegion(),
                 'default_name' => $region->getDefaultName(),
@@ -47,29 +21,17 @@ class LocalizationTransformer extends BaseTransformer
             ];
         }
 
-        // now add the regions
-        $response = array_merge(
-            $response,
+        return $this->filterData(
             [
+                'id' => $model->getLanguage(),
+                'language' => [
+                    'code' => $model->getLanguage(),
+                    'default_name' => $model->getDefaultName(),
+                    'locale_name' => $model->getLocaleName(),
+                ],
                 'regions' => $regions,
-            ]
+            ],
+            []
         );
-
-        $response = $this->filterData(
-            $response,
-            [
-
-            ]
-        );
-
-        return $response;
-    }
-
-    /**
-     * @return string
-     */
-    public function getResourceKey(): string
-    {
-        return 'localizations';
     }
 }

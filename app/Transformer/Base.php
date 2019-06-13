@@ -8,18 +8,10 @@ use League\Fractal\TransformerAbstract;
 
 abstract class BaseTransformer extends TransformerAbstract
 {
-    /**
-     * @return string
-     */
+
     abstract public function getResourceKey(): string;
 
-    /**
-     * @param array $response
-     * @param array $data
-     * @param array $roleNames
-     *
-     * @return array
-     */
+
     public function filterData(
         array $response,
         array $data,
@@ -35,16 +27,7 @@ abstract class BaseTransformer extends TransformerAbstract
         return $response;
     }
 
-    /**
-     * prepare human readable time with users timezone
-     *
-     * @param \Illuminate\Database\Eloquent\Model $entity
-     * @param $responseData
-     * @param array $columns
-     * @param bool $isIncludeDefault
-     *
-     * @return array
-     */
+
     public function addTimesHumanReadable(
         Model $entity,
         $responseData,

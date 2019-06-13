@@ -1,219 +1,99 @@
 <?php declare(strict_types=1);
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 12/26/18
- * Time: 4:43 PM
- */
 
-namespace App\Http\Controllers\V1\Backend\Auth\Authorization;
+namespace Adventive\Http\Controller\V1\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Repositories\Auth\Role\RoleRepository;
-use App\Repositories\Auth\User\UserRepository;
-use App\Transformers\Auth\RoleTransformer;
-use App\Transformers\Auth\UserTransformer;
-use Dingo\Api\Http\Request;
-use Dingo\Api\Http\Response;
+use Adventive\Contract\Auth\Role as RoleRepository;
+use Adventive\Contract\Auth\User as Repository;
+use Adventive\Http\Controller\Base as Controller;
+use Adventive\Transformer\Auth\Role as RoleTransformer;
+use Adventive\Transformer\Auth\User as Transformer;
+use Dingo\Api\Http\{Request, Response};
 
-/**
- * Class AuthorizationController
- *
- * @package App\Http\Controllers\V1\Backend\Auth\Authorization
- */
-class AuthorizationController extends Controller
+
+final class Authorization extends Controller
 {
-    /**
-     * @var UserRepository
-     */
-    protected $userRepository;
 
-    /**
-     * @var RoleRepository
-     */
     protected $roleRepository;
 
-    /**
-     * AuthorizationController constructor.
-     *
-     * @param \App\Repositories\Auth\User\UserRepository $userRepository
-     * @param \App\Repositories\Auth\Role\RoleRepository $roleRepository
-     */
-    public function __construct(
-        UserRepository $userRepository,
-        RoleRepository $roleRepository
-    ) {
-        $this->middleware(
-            'permission:' . config(
-                'setting.permission.permission_names.manage_authorization'
-            )
-        );
+    public function __construct(Repository $repository, RoleRepository $roleRepository)
+    {
+        parent::__construct($repository);
 
-        $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
+
+        $permission = config('setting.permission.permission_names.manage_authorization');
+        $this->middleware("permission:${permission}");
     }
 
-    /**
-     * @param \Dingo\Api\Http\Request $request
-     *
-     * @return Response
-     * @api                {post} /auth/authorizations/assign-role-to-user Assign role to
-     *     user
-     * @apiName            assign-role-to-user
-     * @apiGroup           Authorization
-     * @apiVersion         1.0.0
-     * @apiPermission      Authenticated User
-     * @apiUse             UserResponse
-     * @apiParam {String} user_id User hashed id
-     * @apiParam {String} role_id Role hashed id
-     *
-     */
+
     public function assignRoleToUser(Request $request): Response
     {
-        $userId = $this->decodeHash($request->input('user_id'));
-
-        $this->userRepository->assignRole(
-            $userId,
+        $id = $this->decodeHash($request->input('user_id'));
+        $this->repository->assignRole(
+            $id,
             $this->decodeHash($request->input('role_id'))
         );
 
-        return $this->item($this->userRepository->find($userId), new UserTransformer());
+        return $this->item($this->repository->find($id), new Transformer());
     }
 
-    /**
-     * @param \Dingo\Api\Http\Request $request
-     *
-     * @return Response
-     * @api                {post} /auth/authorizations/revoke-role-from-user Revoke role
-     *     form user
-     * @apiName            revoke-role-from-user
-     * @apiGroup           Authorization
-     * @apiVersion         1.0.0
-     * @apiPermission      Authenticated User
-     * @apiUse             UserResponse
-     * @apiParam {String} user_id User hashed id
-     * @apiParam {String} role_id Role hashed id
-     *
-     */
-    public function revokeRoleFormUser(Request $request): Response
+
+    public function revokeRoleFromUser(Request $request): Response
     {
-        $userId = $this->decodeHash($request->input('user_id'));
-
-        $this->userRepository->removeRole(
-            $userId,
+        $id = $this->decodeHash($request->input('user_id'));
+        $this->repository->removeRole(
+            $id,
             $this->decodeHash($request->input('role_id'))
         );
 
-        $user = $this->userRepository->find($userId);
-
-        return $this->item($user, new UserTransformer());
+        return $this->item($this->repository->find($id), new Transformer());
     }
 
-    /**
-     * @param \Dingo\Api\Http\Request $request
-     *
-     * @return Response
-     * @api                {post} /auth/authorizations/assign-permission-to-user Assign
-     *     permission to user
-     * @apiName            assign-permission-to-user
-     * @apiGroup           Authorization
-     * @apiVersion         1.0.0
-     * @apiPermission      Authenticated User
-     * @apiUse             UserResponse
-     * @apiParam {String} user_id User hashed id
-     * @apiParam {String} permission_id Permission hashed id
-     *
-     */
+
     public function assignPermissionToUser(Request $request): Response
     {
-        $userId = $this->decodeHash($request->input('user_id'));
-
-        $this->userRepository->givePermissionTo(
-            $userId,
+        $id = $this->decodeHash($request->input('user_id'));
+        $this->repository->givePermissionTo(
+            $id,
             $this->decodeHash($request->input('permission_id'))
         );
 
-        return $this->item($this->userRepository->find($userId), new UserTransformer());
+        return $this->item($this->repository->find($id), new Transformer());
     }
 
-    /**
-     * @param \Dingo\Api\Http\Request $request
-     *
-     * @return Response
-     * @api                {post} /auth/authorizations/revoke-permission-from-user Revoke
-     *     permission from user
-     * @apiName            revoke-permission-from-user
-     * @apiGroup           Authorization
-     * @apiVersion         1.0.0
-     * @apiPermission      Authenticated User
-     * @apiUse             UserResponse
-     * @apiParam {String} user_id User hashed id
-     * @apiParam {String} permission_id Permission hashed id
-     *
-     */
+
     public function revokePermissionFromUser(Request $request): Response
     {
-        $userId = $this->decodeHash($request->input('user_id'));
-
-        $this->userRepository->revokePermissionTo(
-            $userId,
+        $id = $this->decodeHash($request->input('user_id'));
+        $this->repository->revokePermissionTo(
+            $id,
             $this->decodeHash($request->input('permission_id'))
         );
 
-        return $this->item($this->userRepository->find($userId), new UserTransformer());
+        return $this->item($this->repository->find($id), new Transformer());
     }
 
-    /**
-     * @param \Dingo\Api\Http\Request $request
-     *
-     * @return Response
-     * @api                {post} /auth/authorizations/attach-permission-to-role Attach
-     *     permission to role
-     * @apiName            attach-permission-to-role
-     * @apiGroup           Authorization
-     * @apiVersion         1.0.0
-     * @apiPermission      Authenticated User
-     * @apiUse             RoleResponse
-     * @apiParam {String} role_id Role hashed id
-     * @apiParam {String} permission_id Permission hashed id
-     *
-     */
+
     public function attachPermissionToRole(Request $request): Response
     {
-        $roleId = $this->decodeHash($request->input('role_id'));
-
+        $id = $this->decodeHash($request->input('role_id'));
         $this->roleRepository->givePermissionTo(
-            $roleId,
+            $id,
             $this->decodeHash($request->input('permission_id'))
         );
 
-        return $this->item($this->roleRepository->find($roleId), new RoleTransformer());
+        return $this->item($this->roleRepository->find($id), new RoleTransformer());
     }
 
-    /**
-     * @param \Dingo\Api\Http\Request $request
-     *
-     * @return Response
-     * @api                {post} /auth/authorizations/revoke-permission-from-role Revoke
-     *     permission from role
-     * @apiName            revoke-permission-from-role
-     * @apiGroup           Authorization
-     * @apiVersion         1.0.0
-     * @apiPermission      Authenticated User
-     * @apiUse             RoleResponse
-     * @apiParam {String} role_id Role hashed id
-     * @apiParam {String} permission_id Permission hashed id
-     *
-     */
+
     public function revokePermissionFromRole(Request $request): Response
     {
-        $roleId = $this->decodeHash($request->input('role_id'));
-
+        $id = $this->decodeHash($request->input('role_id'));
         $this->roleRepository->revokePermissionTo(
-            $roleId,
+            $id,
             $this->decodeHash($request->input('permission_id'))
         );
 
-        return $this->item($this->roleRepository->find($roleId), new RoleTransformer());
+        return $this->item($this->roleRepository->find($id), new RoleTransformer());
     }
 }

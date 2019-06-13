@@ -7,15 +7,7 @@ use Tests\TestCase;
 
 class UserAccessTest extends TestCase
 {
-    /**
-     * @param $method
-     * @param $uri
-     * @param $roleName
-     * @param $statusCode
-     *
-     * @test
-     * @dataProvider dataResources
-     */
+
     public function access($method, $uri, $roleName, $statusCode)
     {
         if (!empty($roleName)) {

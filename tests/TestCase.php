@@ -35,17 +35,13 @@ abstract class TestCase extends BaseTestCase
         $this->beginDatabaseTransaction();
     }
 
-    /**
-     * Creates the application.
-     *
-     * @return Application
-     */
+
     public function createApplication()
     {
         return require __DIR__ . '/../bootstrap/app.php';
     }
 
-    protected function route($name, array $parameters = []/*, $secure = null*/)
+    protected function route($name, array $parameters = [])
     {
         $urls = [
             'frontend.users.profile' => '/profile',
@@ -84,12 +80,7 @@ abstract class TestCase extends BaseTestCase
 //        return app('Dingo\Api\Routing\UrlGenerator')->version('v1')->route($name, $parameters);
     }
 
-    /**
-     * @param array $headers
-     * @param bool $isServer
-     *
-     * @return array
-     */
+
     protected function addHeaders(array $headers = [], bool $isServer = false)
     {
         $headers += [

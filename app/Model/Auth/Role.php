@@ -8,11 +8,7 @@ class Role extends \Spatie\Permission\Models\Role
 {
     use Hashable;
 
-    /**
-     * all permissions
-     *
-     * name => value
-     */
+
     const PERMISSIONS = [
         'index' => 'role index',
         'create' => 'role store',

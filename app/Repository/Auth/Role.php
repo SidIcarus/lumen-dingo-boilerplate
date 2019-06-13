@@ -1,10 +1,5 @@
 <?php declare(strict_types=1);
-/**
- * Created by PhpStorm.
- * User: Lloric Mayuga Garcia <lloricode@gmail.com>
- * Date: 12/16/18
- * Time: 11:28 AM
- */
+
 
 namespace App\Repositories\Auth\Role;
 
@@ -16,25 +11,15 @@ use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Spatie\Permission\Guard;
 
-/**
- * Class RoleRepositoryEloquent
- *
- * @package App\Repositories\Auth\Role
- */
+
 class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
 {
-    /**
-     * @var array
-     */
+
     protected $fieldSearchable = [
         'name' => 'like',
     ];
 
-    /**
-     * Specify Validator Rules
-     *
-     * @var array
-     */
+
     protected $rules = [
         ValidatorInterface::RULE_CREATE => [
             'name' => 'required|string',
@@ -44,10 +29,7 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
         ],
     ];
 
-    /**
-     * @param $id
-     * @param int $permissionId
-     */
+
     public function revokePermissionTo($id, int $permissionId)
     {
         $role = $this->find($id);
@@ -55,10 +37,7 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
         event(new RepositoryEntityUpdated($this, $role));
     }
 
-    /**
-     * @param $id
-     * @param int $permissionId
-     */
+
     public function givePermissionTo($id, int $permissionId)
     {
         event(
@@ -69,14 +48,7 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
         );
     }
 
-    /**
-     * @param array $attributes
-     * @param $id
-     *
-     * @return mixed
-     * @throws RepositoryException
-     * @throws ValidatorException
-     */
+
     public function update(array $attributes, $id)
     {
         $this->skipPresenter(true);
@@ -101,11 +73,7 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
         return parent::update($attributes, $id);
     }
 
-    /**
-     * Specify Model class name
-     *
-     * @return string
-     */
+
     public function model()
     {
         return config('permission.models.role');
@@ -118,11 +86,7 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
         return parent::delete($id);
     }
 
-    /**
-     * @param array $attributes
-     *
-     * @return mixed
-     */
+
     public function create(array $attributes)
     {
         $this->validate($attributes, ValidatorInterface::RULE_CREATE);
@@ -133,11 +97,7 @@ class RoleRepositoryEloquent extends BaseRepository implements RoleRepository
         return $this->parserResult($role);
     }
 
-    /**
-     * @param $id
-     *
-     * @return mixed
-     */
+
     private function checkDefault($id)
     {
         $role = $this->find($id);

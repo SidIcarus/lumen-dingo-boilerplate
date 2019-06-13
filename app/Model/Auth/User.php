@@ -12,7 +12,8 @@ use Laravel\Lumen\Auth\Authorizable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class User extends Model
+    implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable;
     use Authorizable;
@@ -21,11 +22,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     use SoftDeletes;
     use Hashable;
 
-    /**
-     * all permissions
-     *
-     * name => value
-     */
+
     const PERMISSIONS = [
         // basic
         'index' => 'user index',
@@ -43,21 +40,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
+     * @inheritDoc
      */
     protected $fillable = [
+        'email',
         'first_name',
         'last_name',
-        'email',
         'password',
     ];
 
     /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
+     * @inheritDoc
      */
     protected $hidden = [
         'password',

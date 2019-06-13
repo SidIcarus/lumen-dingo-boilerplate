@@ -7,9 +7,7 @@ use Tests\TestCase;
 
 class DeleteResourceFailedTest extends TestCase
 {
-    /**
-     * @test
-     */
+
     public function purgeNoneDeletedUserWillGive404()
     {
         $this->loggedInAs();
@@ -24,9 +22,7 @@ class DeleteResourceFailedTest extends TestCase
         $this->assertResponseStatus(404);
     }
 
-    /**
-     * @test
-     */
+
     public function restoreNoneDeletedUserWillGive404()
     {
         $this->loggedInAs();

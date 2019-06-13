@@ -4,18 +4,13 @@ namespace Tests;
 
 //use Illuminate\Contracts\Console\Kernel;
 
-/**
- * Trait UsesDatabase
- *
- * @package Tests
- * @reference https://github.com/spatie/blender/blob/master/tests/Concerns/UsesDatabase.php
- */
+
 trait UsesDatabase
 {
-    /** @var bool */
+
     protected static $migrated = false;
 
-    /** @var string */
+
     protected $database = __DIR__ . '/../database/database.sqlite';
 
     public function prepareDatabase($force = false)

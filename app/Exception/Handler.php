@@ -13,11 +13,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * A list of the exception types that should not be reported.
-     *
-     * @var array
-     */
+
     protected $dontReport = [
         AuthorizationException::class,
         HttpException::class,
@@ -25,28 +21,13 @@ class Handler extends ExceptionHandler
         ValidationException::class,
     ];
 
-    /**
-     * Report or log an exception.
-     *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-     *
-     * @param \Exception $exception
-     *
-     * @return void
-     */
+
     public function report(Exception $exception): void
     {
         parent::report($exception);
     }
 
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param Request $request
-     * @param \Exception $exception
-     *
-     * @return Response
-     */
+
     public function render($request, Exception $exception): Response
     {
         return parent::render($request, $exception);

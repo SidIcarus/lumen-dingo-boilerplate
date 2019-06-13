@@ -6,11 +6,7 @@ class RolesSeeder extends Seeder
 {
     use SeederHelper;
 
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+
     public function run()
     {
         $roleModel = app(config('permission.models.role'));

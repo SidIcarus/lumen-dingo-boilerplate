@@ -7,23 +7,10 @@ use App\Transformers\LocalizationTransformer;
 use App\Values\Localizations\Localization;
 use Dingo\Api\Http\Response;
 
-/**
- * Class LocalizationController
- *
- * @package App\Http\Controllers\V1
- */
+
 class LocalizationController extends Controller
 {
-    /**
-     * @return Response
-     * @api                {get} /localizations Get all localizations
-     * @apiName            get-all-localizations
-     * @apiGroup           Localization
-     * @apiVersion         1.0.0
-     * @apiPermission      Authenticated User
-     * @apiUse             LocalizationsResponse
-     *
-     */
+
     public function index(): Response
     {
         $localizations = collect();

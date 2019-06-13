@@ -142,11 +142,11 @@ return [
         'allowed' => [
             'only' => [
                 'all',
-                'paginate',
                 'find',
                 'findByField',
                 'findWhere',
                 'getByCriteria',
+                'paginate',
             ],
             'except' => null,
         ],
@@ -176,64 +176,43 @@ return [
         | $query->where('foo','like','bar')
         |
         */
-        'acceptedConditions' => [
-            '=',
-            'like',
-        ],
-        /*
-        |--------------------------------------------------------------------------
-        | Request Params
-        |--------------------------------------------------------------------------
-        |
-        | Request parameters that will be used to filter the query in the repository
-        |
-        | Params :
-        |
-        | - search : Searched value
-        |   Ex: http://prettus.local/?search=lorem
-        |
-        | - searchFields : Fields in which research should be carried out
-        |   Ex:
-        |    http://prettus.local/?search=lorem&searchFields=name;email
-        |    http://prettus.local/?search=lorem&searchFields=name:like;email
-        |    http://prettus.local/?search=lorem&searchFields=name:like
-        |
-        | - filter : Fields that must be returned to the response object
-        |   Ex:
-        |   http://prettus.local/?search=lorem&filter=id,name
-        |
-        | - orderBy : Order By
-        |   Ex:
-        |   http://prettus.local/?search=lorem&orderBy=id
-        |
-        | - sortedBy : Sort
-        |   Ex:
-        |   http://prettus.local/?search=lorem&orderBy=id&sortedBy=asc
-        |   http://prettus.local/?search=lorem&orderBy=id&sortedBy=desc
-        |
-        | - searchJoin: Specifies the search method (AND / OR), by default the
-        |               application searches each parameter with OR
-        |   EX:
-        |   http://prettus.local/?search=lorem&searchJoin=and
-        |   http://prettus.local/?search=lorem&searchJoin=or
-        |
+        'acceptedConditions' => ['=', 'like'],
+        /**
+         * Request Params
+         *
+         * Request parameters that will be used to filter the query in the
+         * repository
+         *
+         * Params:
+         *  - search: Searched value
+         *    - http://prettus.local/?search=lorem
+         *  - searchFields: Fields in which research should be carried out
+         *    - http://prettus.local/?search=lorem&searchFields=name;email
+         *    - http://prettus.local/?search=lorem&searchFields=name:like;email
+         *    - http://prettus.local/?search=lorem&searchFields=name:like
+         *  - filter: Fields that must be returned to the response object
+         *    - http://prettus.local/?search=lorem&filter=id,name
+         *  - orderBy: Order By
+         *    - http://prettus.local/?search=lorem&orderBy=id
+         *  - sortedBy: Sort
+         *    - http://prettus.local/?search=lorem&orderBy=id&sortedBy=asc
+         *    - http://prettus.local/?search=lorem&orderBy=id&sortedBy=desc
+         *  - searchJoin: Specifies the search method (AND / OR), by default the
+         *                application searches each parameter with OR
+         *    - http://prettus.local/?search=lorem&searchJoin=and
+         *    - http://prettus.local/?search=lorem&searchJoin=or
         */
         'params' => [
-            'search' => 'search',
-            'searchFields' => 'searchFields',
             'filter' => 'filter',
             'orderBy' => 'orderBy',
+            'search' => 'search',
+            'searchFields' => 'searchFields',
+            'searchJoin' => 'searchJoin',
             'sortedBy' => 'sortedBy',
             'with' => 'with',
-            'searchJoin' => 'searchJoin',
         ],
     ],
-    /*
-    |--------------------------------------------------------------------------
-    | Generator Config
-    |--------------------------------------------------------------------------
-    |
-    */
+    /** Generator Config */
     'generator' => [
         'basePath' => app()->path(),
         'rootNamespace' => 'App\\',
